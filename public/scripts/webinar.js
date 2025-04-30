@@ -20,18 +20,17 @@ async function fetchPost(url, data , headers = {}, options = {}){
 async function getAndAppendWebinars(){
     try {
     const {webinars} = await fetchGet('/getwebinars');
-    console.log(webinars);
     const list = document.getElementById('webinar-list');
     webinars.forEach(w => {
         const div = document.createElement('div');
         div.className = 'webinar-card';
         div.innerHTML = `
-          <h3>${w.Webcountry}</h3>
-          <p>${w.Webcountry}</p>
+          <h3>${w.title}</h3>
+          <p>${w.country}</p>
           <p>${new Date(w.WebDate).toLocaleString()}</p>
           ${w.status === 'passed' ? '<a href="/webinar/api/download?webinar=' + w.id + '">Download Certificate</a>' :
             w.status === 'failed' ? '<a href="/webinar/test?id=' + w.id + '">Retry Test</a>' :
-            '<a href="/webinar/test?id=' + w.id + '">Start Test</a>'}
+            '<a href="/webinar/test?category=' + w.country + '">Start Test</a>'}
         `;
         list.appendChild(div);
       });
