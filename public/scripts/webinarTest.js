@@ -231,7 +231,7 @@ const quizData = [
 
 let currentQuestion = 0;
 let score = 0;
-let timeLeftBehind = 30;
+let timeLeftremaining = 30;
 let timerInterval;
 let answered = false;
 let selectedOption = null;
@@ -268,52 +268,73 @@ function initQuiz() {
 }
 
 // Load question
-function startTimer() {
-// Reset animation
-timerCircle.style.animation = 'none';
-void timerCircle.offsetWidth; // Trigger reflow
-timerCircle.style.animation = 'rotate 30s linear forwards';
-
-// Clear previous interval
-clearInterval(timerInterval);
-
-// Start new timer
-timerElement.textContent = timeLeftBehind;
-timerInterval = setInterval(() => {
-    timeLeftBehind--;
-    timerElement.textContent = timeLeftBehind;
-    
-    if (timeLeftBehind <= 0) {
-        clearInterval(timerInterval);
-        showCorrectAnswer();
-    }
-}, 1000);
-}
-
-// Load question
 function loadQuestion() {
-// Reset state
-answered = false;
-selectedOption = null;
-timeLeftBehind = 30; // updated
-
-// Reset options
-optionElements.forEach(option => {
-    option.classList.remove('selected', 'correct', 'incorrect');
-});
-
-// Update UI
-questionElement.textContent = quizData[currentQuestion].question;
-currentQuestionElement.textContent = currentQuestion + 1;
-
-// Update options
-optionElements.forEach((option, index) => {
-    option.textContent = quizData[currentQuestion].options[index];
-});
+  // Reset state
+  answered = false;
+  selectedOption = null;
+  timeLeftremaining = 30;
+  
+  // Reset options
+  optionElements.forEach(option => {
+      option.classList.remove('selected', 'correct', 'incorrect');
+  });
+  
+  // Update UI
+  questionElement.textContent = quizData[currentQuestion].question;
+  currentQuestionElement.textContent = currentQuestion + 1;
+  
+  // Update options
+  optionElements.forEach((option, index) => {
+      option.textContent = quizData[currentQuestion].options[index];
+  });
+  
+  // Start timer
+  startTimer();
+}
 
 // Start timer
-startTimer();
+function startTimer() {
+  // Reset animation
+  timerCircle.style.animation = 'none';
+  void timerCircle.offsetWidth; // Trigger reflow
+  timerCircle.style.animation = 'rotate 30s linear forwards';
+  
+  // Clear previous interval
+  clearInterval(timerInterval);
+  
+  // Set initial timer color
+  timerCircle.style.borderColor = '#4361ee';
+  timerCircle.style.borderRightColor = 'transparent';
+  timerElement.style.color = '#ffffff';
+  
+  // Start new timer
+  timerElement.textContent = timeLeftremaining;
+  timerInterval = setInterval(() => {
+    timeLeftremaining--;
+      timerElement.textContent = timeLeftremaining;
+      
+      // Change colors based on time remaining - using darker colors
+      if (timeLeftremaining <= 5) {
+          timerCircle.style.borderColor = '#d00000'; // Darker red
+          timerCircle.style.borderRightColor = 'transparent';
+          timerElement.style.color = '#d00000';
+      } else if (timeLeftremainingt <= 10) {
+          timerCircle.style.borderColor = '#e85d04'; // Darker orange
+          timerCircle.style.borderRightColor = 'transparent';
+          timerElement.style.color = '#e85d04';
+      } else if (timeLeftremaining <= 20) {
+          timerCircle.style.borderColor = '#0077b6'; // Darker blue
+          timerCircle.style.borderRightColor = 'transparent';
+          timerElement.style.color = '#0077b6';
+      }
+      
+      if (timeLeftremaining <= 0) {
+          clearInterval(timerInterval);
+          showCorrectAnswer();
+      }
+  }, 1000);
 }
+
 // Select option
 function selectOption() {
   if (answered) return;
@@ -326,13 +347,14 @@ function selectOption() {
   // Add selected state
   this.classList.add('selected');
   selectedOption = parseInt(this.dataset.index);
+  
+  // Immediately check the answer
+  checkAnswer();
 }
 
 // Next question
 function nextQuestion() {
-  if (!answered && selectedOption !== null) {
-      checkAnswer();
-  } else if (!answered) {
+  if (!answered) {
       alert("Please select an option or skip this question.");
       return;
   }
@@ -380,6 +402,8 @@ function checkAnswer() {
   // Update score
   if (selectedOption === correctIndex) {
       score++;
+      // Update progress bar based on correct answers
+      updateProgressBarForCorrectAnswer();
   }
   
   // Add a delay before enabling the next button
@@ -401,6 +425,12 @@ function showCorrectAnswer() {
 // Update progress bar
 function updateProgressBar() {
   const progress = (currentQuestion / quizData.length) * 100;
+  progressBar.style.width = `${progress}%`;
+}
+
+// Update progress bar based on correct answers
+function updateProgressBarForCorrectAnswer() {
+  const progress = (score / quizData.length) * 100;
   progressBar.style.width = `${progress}%`;
 }
 
