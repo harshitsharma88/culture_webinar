@@ -174,3 +174,269 @@ function showToast(type, title, message, duration = 3000) {
       toast.remove();
     });
 }
+
+
+const quizData = [
+  {
+      question: "Which planet is known as the Red Planet?",
+      options: ["Venus", "Mars", "Jupiter", "Saturn"],
+      correct: 1
+  },
+  {
+      question: "Who painted the Mona Lisa?",
+      options: ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Michelangelo"],
+      correct: 2
+  },
+  {
+      question: "What is the largest ocean on Earth?",
+      options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
+      correct: 3
+  },
+  {
+      question: "Which element has the chemical symbol 'O'?",
+      options: ["Oxygen", "Gold", "Silver", "Iron"],
+      correct: 0
+  },
+  {
+      question: "Which country is home to the kangaroo?",
+      options: ["New Zealand", "South Africa", "Australia", "Brazil"],
+      correct: 2
+  },
+  {
+      question: "What is the capital city of Japan?",
+      options: ["Seoul", "Beijing", "Tokyo", "Bangkok"],
+      correct: 2
+  },
+  {
+      question: "Which famous scientist developed the theory of relativity?",
+      options: ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Stephen Hawking"],
+      correct: 1
+  },
+  {
+      question: "What is the largest organ in the human body?",
+      options: ["Brain", "Liver", "Heart", "Skin"],
+      correct: 3
+  },
+  {
+      question: "Which mountain is the tallest in the world?",
+      options: ["K2", "Mount Everest", "Mount Kilimanjaro", "Mount Fuji"],
+      correct: 1
+  },
+  {
+      question: "Which is the smallest prime number?",
+      options: ["0", "1", "2", "3"],
+      correct: 2
+  }
+];
+
+let currentQuestion = 0;
+let score = 0;
+let timeLeftBehind = 30;
+let timerInterval;
+let answered = false;
+let selectedOption = null;
+
+const progressBar = document.getElementById('progress-bar');
+const currentQuestionElement = document.getElementById('current-question');
+const totalQuestionsElement = document.getElementById('total-questions');
+const questionElement = document.getElementById('question');
+const optionElements = document.querySelectorAll('.option');
+const nextButton = document.getElementById('next-btn');
+const skipButton = document.getElementById('skip-btn');
+const timerElement = document.getElementById('timer');
+const timerCircle = document.getElementById('timer-circle');
+const resultContainer = document.getElementById('result-container');
+const quizBody = document.querySelector('.quiz-body');
+const scoreElement = document.getElementById('score');
+const resultInfoElement = document.getElementById('result-info');
+const restartButton = document.getElementById('restart-btn');
+
+// Initialize the quiz
+function initQuiz() {
+  loadQuestion();
+  totalQuestionsElement.textContent = quizData.length;
+  
+  // Add event listeners to options
+  optionElements.forEach(option => {
+      option.addEventListener('click', selectOption);
+  });
+  
+  // Add event listeners to buttons
+  nextButton.addEventListener('click', nextQuestion);
+  skipButton.addEventListener('click', skipQuestion);
+  restartButton.addEventListener('click', restartQuiz);
+}
+
+// Load question
+function startTimer() {
+// Reset animation
+timerCircle.style.animation = 'none';
+void timerCircle.offsetWidth; // Trigger reflow
+timerCircle.style.animation = 'rotate 30s linear forwards';
+
+// Clear previous interval
+clearInterval(timerInterval);
+
+// Start new timer
+timerElement.textContent = timeLeftBehind;
+timerInterval = setInterval(() => {
+    timeLeftBehind--;
+    timerElement.textContent = timeLeftBehind;
+    
+    if (timeLeftBehind <= 0) {
+        clearInterval(timerInterval);
+        showCorrectAnswer();
+    }
+}, 1000);
+}
+
+// Load question
+function loadQuestion() {
+// Reset state
+answered = false;
+selectedOption = null;
+timeLeftBehind = 30; // updated
+
+// Reset options
+optionElements.forEach(option => {
+    option.classList.remove('selected', 'correct', 'incorrect');
+});
+
+// Update UI
+questionElement.textContent = quizData[currentQuestion].question;
+currentQuestionElement.textContent = currentQuestion + 1;
+
+// Update options
+optionElements.forEach((option, index) => {
+    option.textContent = quizData[currentQuestion].options[index];
+});
+
+// Start timer
+startTimer();
+}
+// Select option
+function selectOption() {
+  if (answered) return;
+  
+  // Clear selected state
+  optionElements.forEach(option => {
+      option.classList.remove('selected');
+  });
+  
+  // Add selected state
+  this.classList.add('selected');
+  selectedOption = parseInt(this.dataset.index);
+}
+
+// Next question
+function nextQuestion() {
+  if (!answered && selectedOption !== null) {
+      checkAnswer();
+  } else if (!answered) {
+      alert("Please select an option or skip this question.");
+      return;
+  }
+  
+  currentQuestion++;
+  
+  if (currentQuestion < quizData.length) {
+      loadQuestion();
+      updateProgressBar();
+  } else {
+      showResult();
+  }
+}
+
+// Skip question
+function skipQuestion() {
+  clearInterval(timerInterval);
+  
+  currentQuestion++;
+  
+  if (currentQuestion < quizData.length) {
+      loadQuestion();
+      updateProgressBar();
+  } else {
+      showResult();
+  }
+}
+
+// Check answer
+function checkAnswer() {
+  answered = true;
+  clearInterval(timerInterval);
+  
+  const correctIndex = quizData[currentQuestion].correct;
+  
+  // Show correct and incorrect answers
+  optionElements.forEach((option, index) => {
+      if (index === correctIndex) {
+          option.classList.add('correct');
+      } else if (index === selectedOption && selectedOption !== correctIndex) {
+          option.classList.add('incorrect');
+      }
+  });
+  
+  // Update score
+  if (selectedOption === correctIndex) {
+      score++;
+  }
+  
+  // Add a delay before enabling the next button
+  setTimeout(() => {
+      nextButton.disabled = false;
+  }, 1000);
+}
+
+// Show correct answer (when time runs out)
+function showCorrectAnswer() {
+  answered = true;
+  
+  const correctIndex = quizData[currentQuestion].correct;
+  
+  // Show correct answer
+  optionElements[correctIndex].classList.add('correct');
+}
+
+// Update progress bar
+function updateProgressBar() {
+  const progress = (currentQuestion / quizData.length) * 100;
+  progressBar.style.width = `${progress}%`;
+}
+
+// Show result
+function showResult() {
+  quizBody.style.display = 'none';
+  resultContainer.style.display = 'block';
+  scoreElement.textContent = `${score}/${quizData.length}`;
+  
+  let message = '';
+  const percentage = (score / quizData.length) * 100;
+  
+  if (percentage >= 90) {
+      message = "Excellent! You're a quiz master!";
+  } else if (percentage >= 70) {
+      message = "Great job! You have good knowledge!";
+  } else if (percentage >= 50) {
+      message = "Good effort! Keep learning!";
+  } else {
+      message = "Keep practicing! You'll improve!";
+  }
+  
+  resultInfoElement.textContent = message;
+}
+
+// Restart quiz
+function restartQuiz() {
+  currentQuestion = 0;
+  score = 0;
+  
+  resultContainer.style.display = 'none';
+  quizBody.style.display = 'block';
+  
+  progressBar.style.width = '10%';
+  loadQuestion();
+}
+
+// Initialize the quiz when the page loads
+window.onload = initQuiz;

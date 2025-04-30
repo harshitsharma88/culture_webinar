@@ -7,18 +7,50 @@
     <link rel="stylesheet" href="/webinar/styles/webinarTest.css">
 </head>
 <body>
-    <div id="question-container">
-        <div id="question-title"></div>
-        <div id="options"></div>
-        <div id="timer">
-            <svg viewBox="0 0 36 36">
-                <path id="timer-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
-                <path id="timer-path" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
-            </svg>
-            <span id="time-remaining">30</span>
+    <section>
+        <div class="container">
+            <div class="quiz-part">
+                <div class="quiz-container">
+                    <div class="quiz-header">
+                        <h1 class="quiz-title">Knowledge Challenge Quiz</h1>
+                        <div class="progress-container">
+                            <div class="progress-bar" id="progress-bar"></div>
+                        </div>
+                        <div class="quiz-info">
+                            <p class="question-counter">Question <span id="current-question">1</span>/<span id="total-questions">10</span></p>
+                            <div class="timer-container">
+                                <div class="timer-circle" id="timer-circle"></div>
+                                <span id="timer">30</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-body">
+                        <div class="question" id="question">Which planet is known as the Red Planet?</div>
+                        
+                        <div class="options-container">
+                            <div class="option" data-index="0">Venus</div>
+                            <div class="option" data-index="1">Mars</div>
+                            <div class="option" data-index="2">Jupiter</div>
+                            <div class="option" data-index="3">Saturn</div>
+                        </div>
+                        
+                        <div class="btn-container">
+                            <button class="btn skip" id="skip-btn">Skip</button>
+                            <button class="btn" id="next-btn">Next</button>
+                        </div>
+                    </div>
+                    
+                    <div class="result-container" id="result-container">
+                        <h2 class="result-title">Quiz Completed!</h2>
+                        <div class="score" id="score">7/10</div>
+                        <p class="result-info" id="result-info">Great job! You answered 7 questions correctly.</p>
+                        <button class="restart-btn" id="restart-btn">Take Quiz Again</button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <button id="next-button" disabled>Next</button>
-    </div>
+       </section>
     <div class="toast-container" id="toastContainer"></div> <!-- Toast container Don't move it inside any element -->
     <script src="/webinar/scripts/webinarTest.js"></script>
 </body>
