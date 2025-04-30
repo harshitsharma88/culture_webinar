@@ -21,6 +21,7 @@ const webinarController = {
         try {
             const result = await executeStoredProcedure("USP_GetWebinarListChecking_AgentTestAttempt", 
                 [{name : "Agentid", value : req.agentid}]);
+            console.log(result)
             return res.status(200).json({webinars : result});
         } catch (error) {
             catchBlock(error, "")
