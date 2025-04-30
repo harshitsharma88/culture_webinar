@@ -40,7 +40,7 @@ web_modules/
 .env.*.local
 
 #
-All_SP_List.txt
+All_SP_TABLE_LIST.txt
 test.js
 test.html
 test.ejs
