@@ -1,176 +1,209 @@
-
-
-.on-top-first{
-   background-color:  #3434ff;
-   position: relative;
-   padding: 3rem 2rem;
-   height: 500px;
+.on-top-first {
+  background-color: rebeccapurple;
+  position: relative;
+  padding: 3rem 2rem;
+  height: 500px;
 }
-.wb-container {
-   
-    padding: 20px; 
-    text-align: start; 
-  }
-  
-  .wb-heading {
-    letter-spacing: .01em;
-    margin-top: 0;
-    margin-bottom: 18px;
-    font-size: 40px;
-    color: white;
-      font-family: Jakarta Display, sans-serif;
-    font-weight: 500;
-    line-height: 1.2em;
-  }
-  
-  .wb-paragraph {
-    color: white;
-    font-size: 1.2rem;
-  }
-  
-  .wb-button {
-    background-color: #ffffff;
-    color: #3434ff; /* Added # to color code */
-    border: none;
-    font-family: "Inter", sans-serif;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 500;
-    border-radius: 5px; /* optional: rounded button */
-    transition: background-color 0.3s, color 0.3s; /* smooth transition */
-  }
-  
-  /* Hover effect */
-  .wb-button:hover {
-    background-color: #3434ff;
-    color: white;
-    border: 0.2px solid white;
-  }
-  
-  .wb-container {
-    position: relative;
-    height: 400px; /* Adjust size as needed */
-    margin: 0 auto;
-    overflow: hidden;
-  }
-  .wb-container-new {
-    position: relative;
-    margin: 0 auto;
-    overflow: hidden;
-  }
-  .wb-main-image {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 87%;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-  }
-  
-  .wb-floating-image {
-    position: absolute;
-    /* or adjust as needed */
-    background: white;
-    padding: 10px;
-    border-radius: 20px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    z-index: 2;
-    will-change: transform;
-    transition: transform 0.5s ease;
-    transform-style: preserve-3d;
-  }
-  
 
-  .wb-top-left {
-    bottom: 10px;
-    left: 10px;
-    width: 26%;
-    box-shadow: 0 16px 34px rgba(52, 52, 255, .12), 0 14px 44px rgba(11, 11, 44, .18);
-  }
-  
-  .wb-bottom-left {
-    bottom: 10px;
-    right: 10px;
-    width: 34%;
-    box-shadow: 0 16px 34px rgba(52, 52, 255, .12), 0 14px 44px rgba(11, 11, 44, .18);
-  }
-  
-  .wb-right {
-    top: 30%;
-    right: 10px;
-    transform: translateY(-50%);
-    width: 33%;
-    box-shadow: 0 16px 34px rgba(52, 52, 255, .12), 0 14px 44px rgba(11, 11, 44, .18);
-  }
-  .wb-section-image {
-    position: absolute;
-    will-change: transform;
-    transition: transform 0.5s ease;
-    transform-style: preserve-3d;
-    z-index: 1;
+.wb-container {
+
+  padding: 20px;
+  text-align: start;
+}
+
+.wb-heading {
+  letter-spacing: .01em;
+  margin-top: 0;
+  margin-bottom: 18px;
+  font-size: 40px;
+  color: white;
+  font-family: Jakarta Display, sans-serif;
+  font-weight: 500;
+  line-height: 1.2em;
+}
+
+.wb-paragraph {
+  color: white;
+  font-size: 1.2rem;
+}
+
+.wb-button {
+  background-color: #ffffff;
+  color: #3434ff;
+  /* Added # to color code */
+  border: none;
+  font-family: "Inter", sans-serif;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 5px;
+  /* optional: rounded button */
+  transition: background-color 0.3s, color 0.3s;
+  /* smooth transition */
+}
+
+/* Hover effect */
+.wb-button:hover {
+  background-color: #3434ff;
+  color: white;
+  border: 0.2px solid white;
+}
+
+.wb-container {
+  position: relative;
+  height: 400px;
+  /* Adjust size as needed */
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.wb-container-new {
+  position: relative;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.wb-main-image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 87%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+.wb-floating-image {
+  position: absolute;
+  /* or adjust as needed */
+  background: white;
+  padding: 10px;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  will-change: transform;
+  transition: transform 0.5s ease;
+  transform-style: preserve-3d;
+}
+
+
+.wb-top-left {
+  bottom: 10px;
+  left: 10px;
+  width: 26%;
+  box-shadow: 0 16px 34px rgba(52, 52, 255, .12), 0 14px 44px rgba(11, 11, 44, .18);
+}
+
+.wb-bottom-left {
+  bottom: 10px;
+  right: 10px;
+  width: 34%;
+  box-shadow: 0 16px 34px rgba(52, 52, 255, .12), 0 14px 44px rgba(11, 11, 44, .18);
+}
+
+.wb-right {
+  top: 30%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 33%;
+  box-shadow: 0 16px 34px rgba(52, 52, 255, .12), 0 14px 44px rgba(11, 11, 44, .18);
+}
+
+.wb-section-image {
+  position: absolute;
+  will-change: transform;
+  transition: transform 0.5s ease;
+  transform-style: preserve-3d;
+  z-index: 1;
 }
 
 /* Define positions for each image */
 .wb-image-left {
-    left: -11%;
-    top: 10%;
-    width: 500px;
-    height: auto;
+  left: -11%;
+  top: 10%;
+  width: 500px;
+  height: auto;
 }
 
 .wb-image-right {
-    right: 0;
-    top: 30%;
-    width: 150px;
-    height: auto;
+  right: 0;
+  top: 30%;
+  width: 150px;
+  height: auto;
 }
 
 .wb-image-center {
-    left: 50%;
-    transform: translateX(-50%);
-    top: -25%;
-    width: 300px;
-    height: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  top: -25%;
+  width: 300px;
+  height: auto;
 }
+
 .wb-image-bottom {
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: -28%;
-    width: 300px;
-    height: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -28%;
+  width: 300px;
+  height: auto;
 }
 
 .on-top-first:hover .wb-section-image {
-    transform: translate3d(0px, -5.4314px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg);
-    transform-style: preserve-3d;
+  transform: translate3d(0px, -5.4314px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg);
+  transform-style: preserve-3d;
 }
 
 
 .on-top-first:hover .wb-image-center {
-    transform: translateX(-50%) translate3d(0px, -5.4314px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg);
-    transform-style: preserve-3d;
+  transform: translateX(-50%) translate3d(0px, -5.4314px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg);
+  transform-style: preserve-3d;
 }
 
 .on-top-first:hover .wb-image-bottom {
-    transform: translateX(-50%) translate3d(0px, -5.4314px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg);
-    transform-style: preserve-3d;
+  transform: translateX(-50%) translate3d(0px, -5.4314px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg);
+  transform-style: preserve-3d;
 }
+
 .on-top-first:hover .wb-floating-image.wb-top-left,
 .on-top-first:hover .wb-floating-image.wb-bottom-left {
-    transform: translate3d(0px, -5.4314px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg);
-    transform-style: preserve-3d;
+  transform: translate3d(0px, -5.4314px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg);
+  transform-style: preserve-3d;
 }
 
 .on-top-first:hover .wb-floating-image.wb-right {
-    transform: translateY(-50%) translate3d(0px, -5.4314px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg);
-    transform-style: preserve-3d;
+  transform: translateY(-50%) translate3d(0px, -5.4314px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg);
+  transform-style: preserve-3d;
 }
+
 .row.webtop-first {
-    display: flex;
-    align-items: center;
-    position: relative;
-    z-index: 5;
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 5;
+}
+
+
+@media only screen and (min-width: 320px) and (max-width: 650px) {
+  .wb-heading {
+    font-size: 24px;
+
   }
-  
-   
+
+  .wb-image-left {
+    display: none;
+  }
+
+  .wb-container {
+    display: none;
+  }
+  .on-top-first {
+    padding: 1rem 0;
+    height: auto;
+}
+.wb-image-center {
+ display: none;
+}
+.wb-image-bottom {
+ display: none;
+}
+}

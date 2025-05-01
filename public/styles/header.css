@@ -118,3 +118,11 @@
     height: 1px;
     background-color: rgb(220, 220, 220);
 }
+
+@media only screen and (min-width: 320px) and (max-width: 650px) {
+    .wbh-dropdown {
+        position: absolute;
+        top: 100%;
+        right: -1px;
+    }
+}
