@@ -21,6 +21,7 @@ const testControllers = {
     },
     async storeAgentResponse(req, res, next){
         try {
+            const answerDetails = JSON.stringify(req.body.answerDetails || []);
             const params = [
                 { name: "agent_name", value: req.agentinfo.agentname},
                 { name: "emailid", value: req.agentinfo.emailid },
@@ -28,7 +29,7 @@ const testControllers = {
                 { name: "category_type", value: req.body.categoryType || 'Dubai'},
                 { name: "country", value: req.body.country || 'Dubai'},
                 { name: "current_question", value: req.body.currentQuestion || 1},
-                { name: "answer_details", value: req.body.answerDetails || []},
+                { name: "answer_details", value: answerDetails},
                 { name: "status", value: req.body.status || "In Progress"},
                 { name: "score", value: req.body.score },
                 { name: "end_time", value: req.body.endTime || null},
@@ -37,7 +38,6 @@ const testControllers = {
                 { name: "new_attempt", value: req.body.newAttempt || null}
             ];
             const result = await executeStoredProcedure('USP_InsertWebinarAnswerRecords', params);
-
             return res.status(200).json({response : result});
         }catch(error){
             catchBlock(error, "Storing Agent Response", res);

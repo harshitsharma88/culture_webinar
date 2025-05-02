@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .input-container {
+            margin-bottom: 20px;
+        }
+        
+        input {
+            padding: 8px;
+            margin: 0 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 250px;
+        }
+        
+        button {
+            padding: 10px 15px;
+            background-color: #2854b0;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+        }
+        
+        button:hover {
+            background-color: #1a3c7d;
+        }
+        
+        #canvas-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            max-width: 100%;
+            overflow: auto;
+        }
+        
+        canvas {
+            max-width: 100%;
+            height: auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        #download-btn {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .responsive-notice {
+            color: #666;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Certificate Generator</h1>
+    
+    <div class="input-container">
+        <input 
+            type="text" 
+            id="country-input" 
+            placeholder="Enter Country Name" 
+            value="Greece"
+        >
+        <input 
+            type="text" 
+            id="name-input" 
+            placeholder="Enter Full Name" 
+            value="Nicole Hubbard"
+        >
+        <button id="generate-btn">Generate Certificate</button>
+    </div>
+    
+    <div id="canvas-container">
+        <canvas id="certificate-canvas"></canvas>
+    </div>
+    
+    <button id="download-btn">Download Certificate</button>
+    
+    <p class="responsive-notice">
+        Note: The preview above is responsive for different screen sizes. 
+        The downloaded PNG will be high resolution.
+    </p>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('certificate-canvas');
+            const ctx = canvas.getContext('2d');
+            const countryInput = document.getElementById('country-input');
+            const nameInput = document.getElementById('name-input');
+            const generateBtn = document.getElementById('generate-btn');
+            const downloadBtn = document.getElementById('download-btn');
+            
+            // Set canvas dimensions based on the original image ratio
+            const certificateWidth = 1024;
+            const certificateHeight = 724;
+            canvas.width = certificateWidth;
+            canvas.height = certificateHeight;
+            
+            // Load certificate template image
+            const certificateImg = new Image();
+            certificateImg.crossOrigin = "Anonymous";
+            certificateImg.src = 'https://i.imgur.com/3JcMECj.png'; // Base template with no text
+            
+            // Generate certificate with default values on load
+            certificateImg.onload = function() {
+                generateCertificate(countryInput.value, nameInput.value);
+            };
+            
+            // Handle generate button click
+            generateBtn.addEventListener('click', function() {
+                generateCertificate(countryInput.value, nameInput.value);
+                downloadBtn.style.display = 'inline-block';
+            });
+            
+            // Handle download button click
+            downloadBtn.addEventListener('click', function() {
+                const link = document.createElement('a');
+                link.download = `${countryInput.value}_Expert_Certificate_${nameInput.value.replace(/ /g, '_')}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+            
+            function generateCertificate(country, name) {
+                // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw certificate background
+                ctx.drawImage(certificateImg, 0, 0, canvas.width, canvas.height);
+                
+                // Set font styles
+                ctx.textAlign = 'center';
+                
+                // Draw country expert title
+                ctx.font = 'bold 32px Arial';
+                ctx.fillStyle = '#000000';
+                let expertTitle = `${country} Expert Training`;
+                ctx.fillText(expertTitle, canvas.width / 2, 220);
+                
+                // Draw name
+                ctx.font = 'bold 26px Arial';
+                ctx.fillText(name, canvas.width / 2, 290);
+                
+                // Draw badge text - replace Greece with country
+                const badgeText = `${country} Expert`;
+                
+                // Update text in certificate body
+                ctx.font = '16px Arial';
+                ctx.textAlign = 'left';
+                
+                // Set up multi-line text for certificate body
+                const baseX = 292;
+                const baseY = 350;
+                const lineHeight = 25;
+                
+                let text1 = `This is to certify that ${name} has successfully completed the ${country} Expert Training`;
+                let text2 = 'Program with Flying Colors!';
+                
+                ctx.fillText(text1, baseX, baseY);
+                ctx.fillText(text2, baseX, baseY + lineHeight);
+                
+                // Draw "Your Expertise, Your Passport:" text
+                ctx.font = 'bold 18px Arial';
+                ctx.fillText('Your Expertise, Your Passport:', baseX, baseY + 3*lineHeight);
+                
+                // Draw paragraph text with country name
+                ctx.font = '16px Arial';
+                const paragraphText = [
+                    `This certificate isn't just a recognition—it's your passport to a world of possibilities. As a Certified`,
+                    `${country} Destination Expert, you are now equipped to guide, inspire, and lead others through the`,
+                    `wonders of ${country}.`
+                ];
+                
+                paragraphText.forEach((line, i) => {
+                    ctx.fillText(line, baseX, baseY + (5+i)*lineHeight);
+                });
+                
+                // Draw current date
+                const currentDate = new Date();
+                const formattedDate = currentDate.toLocaleDateString('en-US', {
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+                
+                ctx.font = '16px Arial';
+                ctx.fillText(formattedDate, 150, 523);
+                ctx.fillText(formattedDate, 150, 583); // Duplicate date at bottom
+                
+                // Show download button
+                downloadBtn.style.display = 'inline-block';
+            }
+        });
+    </script>
+</body>
+</html>

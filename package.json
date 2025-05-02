@@ -13,9 +13,11 @@
   "description": "",
   "dependencies": {
     "dotenv": "^16.5.0",
+    "ejs": "^3.1.10",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mssql": "^11.0.1",
+    "puppeteer": "^24.7.2",
     "redis": "^4.7.0",
     "winston": "^3.17.0"
   }

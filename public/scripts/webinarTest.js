@@ -1,27 +1,54 @@
-let questions = [];
-let current = 0;
-let timer;
-let timeLeft = 30;
+let currentQuestion = 0;
+let score = 0;
+let timeLeftremaining = 30;
+let timerInterval;
+let answered = false;
+let selectedOption = null;
+let quizData = [];
+let answerDetailsString = [];
+
+const progressBar = document.getElementById('progress-bar');
+const currentQuestionElement = document.getElementById('current-question');
+const totalQuestionsElement = document.getElementById('total-questions');
+const questionElement = document.getElementById('question');
+const optionElements = document.querySelectorAll('.option');
+const nextButton = document.getElementById('next-btn');
+const skipButton = document.getElementById('skip-btn');
+const timerElement = document.getElementById('timer');
+const timerCircle = document.getElementById('timer-circle');
+const resultContainer = document.getElementById('result-container');
+const quizBody = document.querySelector('.quiz-body');
+const scoreElement = document.getElementById('score');
+const resultInfoElement = document.getElementById('result-info');
+const restartButton = document.getElementById('restart-btn');
 
 window.addEventListener('load', async () => {
-    await getAppendWebinarDetailsQuestions();
-    const webquestions = await getWebinarQuestionsCached();
-    questions = webquestions;
-    loadQuestion();
+    const [{value: questions}, {value: webinarDetails}] = 
+      await Promise.allSettled([getWebinarQuestionsCached(), getAppendWebinarDetailsQuestions()]);
+    quizData = questions;
+    console.log(quizData);
+    initQuiz();
 });
 
 async function fetchGet(url, headers = {}, options = {}){
     const basePath = options.different ? '' : '/webinar/test';
     url = basePath + url;
-    const response = await fetch(url, {contentType: 'application/json', ...headers});
-    return await response.json();
+    const response = await fetch(url, { headers :{ contentType: 'application/json', ...headers}});
+    return options.notjson ? response : await response.json();
 }
 
 async function fetchPost(url, data , headers = {}, options = {}){
     const basePath = options.different ? '' : '/webinar/test';
     url = basePath + url;
-    const response = await fetch(url, {method: 'POST', body: JSON.stringify(data), contentType: 'application/json', ...headers});
-    return await response.json();
+    const response = await fetch(url, 
+      {
+        method: 'POST', body: JSON.stringify(data), 
+        headers: {
+          'Content-Type': 'application/json',
+          ...headers
+        }
+      });
+    return options.notjson ? response : await response.json();
 }
 
 const getWebinarQuestionsCached = (() => {
@@ -58,7 +85,6 @@ const getWebinarQuestionsCached = (() => {
 async function getAppendWebinarDetailsQuestions(){
     const urlParams = new URLSearchParams(window.location.search);
     const category = urlParams.get('category');
-    console.log(category);
     if(!category || category === 'undefined' || category === 'null' || category === ''){
         showToast('error', 'Error', 'Category not found');
         setTimeout(() => {
@@ -73,185 +99,61 @@ async function getAppendWebinarDetailsQuestions(){
     }
 }
 
-function loadQuestion() {
-  const q = questions[current];
-  document.getElementById('question-title').innerText = q.Questions;
-  const optionsDiv = document.getElementById('options');
-  optionsDiv.innerHTML = '';
-  [q.Option1, q.Option2, q.Option3, q.Option4].forEach(opt => {
-    const btn = document.createElement('button');
-    btn.innerText = opt;
-    btn.onclick = () => handleAnswer(opt, q.CurrectAns);
-    optionsDiv.appendChild(btn);
-  });
-  startTimer();
-}
-
-function handleAnswer(selected, correct) {
-  clearInterval(timer);
-  [...document.getElementById('options').children].forEach(btn => {
-    btn.disabled = true;
-    if (btn.innerText === correct) btn.classList.add('correct');
-    if (btn.innerText === selected && selected !== correct) btn.classList.add('wrong');
-  });
-  document.getElementById('next-button').disabled = false;
-  sendAnswer(selected === correct);
-}
-
-function sendAnswer(correct) {
-  fetch('/webinar/api/answer', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ questionId: questions[current].id, correct })
-  });
-}
-
-function startTimer() {
-  timeLeft = 30;
-  document.getElementById('time-remaining').innerText = timeLeft;
-  timer = setInterval(() => {
-    timeLeft--;
-    document.getElementById('time-remaining').innerText = timeLeft;
-    if (timeLeft <= 0) {
-      clearInterval(timer);
-      handleAnswer(null, questions[current].answer);
-    }
-  }, 1000);
-}
-
-document.getElementById('next-button').onclick = () => {
-  current++;
-  document.getElementById('next-button').disabled = true;
-  if (current < questions.length) {
-    loadQuestion();
-  } else {
-    alert('Test Completed');
-    window.location.href = '/webinar';
-  }
-};
-
-async function sendAgentAnswerResponse(questionID, ) {
-    
-}
-
-
-function showToast(type, title, message, duration = 3000) {
-    const toastContainer = document.getElementById('toastContainer');
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-  
-    let icon = '';
-    switch (type) {
-      case 'success':
-        icon = 'fa-circle-check';
-        break;
-      case 'error':
-        icon = 'fa-circle-xmark';
-        break;
-      case 'warning':
-        icon = 'fa-triangle-exclamation';
-        break;
-    }
-  
-    toast.innerHTML = `
-          <i class="toast-icon fas ${icon}"></i>
-          <div class="toast-content">
-              <div class="toast-title">${title}</div>
-              <div class="toast-message">${message}</div>
-          </div>
-          <i class="toast-close fas fa-times"></i>
-      `;
-  
-    toastContainer.appendChild(toast);
-  
-    // Remove toast after animation
-    setTimeout(() => {
-      toast.remove();
-    }, duration);
-  
-    // Close button functionality
-    toast.querySelector('.toast-close').addEventListener('click', () => {
-      toast.remove();
-    });
-}
-
-
-const quizData = [
-  {
-      question: "Which planet is known as the Red Planet?",
-      options: ["Venus", "Mars", "Jupiter", "Saturn"],
-      correct: 1
-  },
-  {
-      question: "Who painted the Mona Lisa?",
-      options: ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Michelangelo"],
-      correct: 2
-  },
-  {
-      question: "What is the largest ocean on Earth?",
-      options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
-      correct: 3
-  },
-  {
-      question: "Which element has the chemical symbol 'O'?",
-      options: ["Oxygen", "Gold", "Silver", "Iron"],
-      correct: 0
-  },
-  {
-      question: "Which country is home to the kangaroo?",
-      options: ["New Zealand", "South Africa", "Australia", "Brazil"],
-      correct: 2
-  },
-  {
-      question: "What is the capital city of Japan?",
-      options: ["Seoul", "Beijing", "Tokyo", "Bangkok"],
-      correct: 2
-  },
-  {
-      question: "Which famous scientist developed the theory of relativity?",
-      options: ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Stephen Hawking"],
-      correct: 1
-  },
-  {
-      question: "What is the largest organ in the human body?",
-      options: ["Brain", "Liver", "Heart", "Skin"],
-      correct: 3
-  },
-  {
-      question: "Which mountain is the tallest in the world?",
-      options: ["K2", "Mount Everest", "Mount Kilimanjaro", "Mount Fuji"],
-      correct: 1
-  },
-  {
-      question: "Which is the smallest prime number?",
-      options: ["0", "1", "2", "3"],
-      correct: 2
-  }
-];
-
-let currentQuestion = 0;
-let score = 0;
-let timeLeftremaining = 30;
-let timerInterval;
-let answered = false;
-let selectedOption = null;
-
-const progressBar = document.getElementById('progress-bar');
-const currentQuestionElement = document.getElementById('current-question');
-const totalQuestionsElement = document.getElementById('total-questions');
-const questionElement = document.getElementById('question');
-const optionElements = document.querySelectorAll('.option');
-const nextButton = document.getElementById('next-btn');
-const skipButton = document.getElementById('skip-btn');
-const timerElement = document.getElementById('timer');
-const timerCircle = document.getElementById('timer-circle');
-const resultContainer = document.getElementById('result-container');
-const quizBody = document.querySelector('.quiz-body');
-const scoreElement = document.getElementById('score');
-const resultInfoElement = document.getElementById('result-info');
-const restartButton = document.getElementById('restart-btn');
+// const quizData = [
+//   {
+//       question: "Which planet is known as the Red Planet?",
+//       options: ["Venus", "Mars", "Jupiter", "Saturn"],
+//       correct: 1
+//   },
+//   {
+//       question: "Who painted the Mona Lisa?",
+//       options: ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Michelangelo"],
+//       correct: 2
+//   },
+//   {
+//       question: "What is the largest ocean on Earth?",
+//       options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
+//       correct: 3
+//   },
+//   {
+//       question: "Which element has the chemical symbol 'O'?",
+//       options: ["Oxygen", "Gold", "Silver", "Iron"],
+//       correct: 0
+//   },
+//   {
+//       question: "Which country is home to the kangaroo?",
+//       options: ["New Zealand", "South Africa", "Australia", "Brazil"],
+//       correct: 2
+//   },
+//   {
+//       question: "What is the capital city of Japan?",
+//       options: ["Seoul", "Beijing", "Tokyo", "Bangkok"],
+//       correct: 2
+//   },
+//   {
+//       question: "Which famous scientist developed the theory of relativity?",
+//       options: ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Stephen Hawking"],
+//       correct: 1
+//   },
+//   {
+//       question: "What is the largest organ in the human body?",
+//       options: ["Brain", "Liver", "Heart", "Skin"],
+//       correct: 3
+//   },
+//   {
+//       question: "Which mountain is the tallest in the world?",
+//       options: ["K2", "Mount Everest", "Mount Kilimanjaro", "Mount Fuji"],
+//       correct: 1
+//   },
+//   {
+//       question: "Which is the smallest prime number?",
+//       options: ["0", "1", "2", "3"],
+//       correct: 2
+//   }
+// ];
 
 // Initialize the quiz
+
 function initQuiz() {
   loadQuestion();
   totalQuestionsElement.textContent = quizData.length;
@@ -280,12 +182,13 @@ function loadQuestion() {
   });
   
   // Update UI
-  questionElement.textContent = quizData[currentQuestion].question;
+  questionElement.textContent = quizData[currentQuestion].Questions;
   currentQuestionElement.textContent = currentQuestion + 1;
-  
+  const qstnObj = quizData[currentQuestion]
+  const currentOptions = [qstnObj.Option1, qstnObj.Option2, qstnObj.Option3, qstnObj.Option4];
   // Update options
   optionElements.forEach((option, index) => {
-      option.textContent = quizData[currentQuestion].options[index];
+      option.textContent = currentOptions[index];
   });
   
   // Start timer
@@ -318,7 +221,7 @@ function startTimer() {
           timerCircle.style.borderColor = '#d00000'; // Darker red
           timerCircle.style.borderRightColor = 'transparent';
           timerElement.style.color = '#d00000';
-      } else if (timeLeftremainingt <= 10) {
+      } else if (timeLeftremaining <= 10) {
           timerCircle.style.borderColor = '#e85d04'; // Darker orange
           timerCircle.style.borderRightColor = 'transparent';
           timerElement.style.color = '#e85d04';
@@ -335,7 +238,6 @@ function startTimer() {
   }, 1000);
 }
 
-// Select option
 function selectOption() {
   if (answered) return;
   
@@ -352,27 +254,32 @@ function selectOption() {
   checkAnswer();
 }
 
-// Next question
 function nextQuestion() {
   if (!answered) {
-      alert("Please select an option or skip this question.");
+      showToast('error', 'Error', 'Please select an option or skip this question.');
       return;
   }
-  
   currentQuestion++;
+  storeAgentResponses();
   
   if (currentQuestion < quizData.length) {
       loadQuestion();
-      updateProgressBar();
   } else {
       showResult();
   }
+  updateProgressBar();
 }
 
-// Skip question
 function skipQuestion() {
+  const responseObject = {
+    correctAns : quizData[currentQuestion].CurrectAns, 
+    isCorrect : false, 
+    question : quizData[currentQuestion].Questions,
+    selectedAns : null
+  };
+  answerDetailsString.push(responseObject);
   clearInterval(timerInterval);
-  
+  storeAgentResponses();
   currentQuestion++;
   
   if (currentQuestion < quizData.length) {
@@ -388,24 +295,24 @@ function checkAnswer() {
   answered = true;
   clearInterval(timerInterval);
   
-  const correctIndex = quizData[currentQuestion].correct;
-  
+  const correctAnsText = quizData[currentQuestion].CurrectAns;
+  const responseObject = {correctAns : correctAnsText, isCorrect : false, question : quizData[currentQuestion].Questions};
   // Show correct and incorrect answers
   optionElements.forEach((option, index) => {
-      if (index === correctIndex) {
+    if(option.classList.contains('selected')) responseObject.selectedAns = option.textContent;
+      if (option.textContent === correctAnsText) {
           option.classList.add('correct');
-      } else if (index === selectedOption && selectedOption !== correctIndex) {
+          if (option.classList.contains('selected')) {
+              score++;
+              responseObject.isCorrect = true;
+          }
+      } else if (option.classList.contains('selected') && option.textContent != correctAnsText) {
+          option.classList.remove('selected');
           option.classList.add('incorrect');
       }
+      option.classList.remove('selected');
   });
-  
-  // Update score
-  if (selectedOption === correctIndex) {
-      score++;
-      // Update progress bar based on correct answers
-      updateProgressBarForCorrectAnswer();
-  }
-  
+  answerDetailsString.push(responseObject);
   // Add a delay before enabling the next button
   setTimeout(() => {
       nextButton.disabled = false;
@@ -416,21 +323,18 @@ function checkAnswer() {
 function showCorrectAnswer() {
   answered = true;
   
-  const correctIndex = quizData[currentQuestion].correct;
+  const correctAns = quizData[currentQuestion].CurrectAns;
   
-  // Show correct answer
-  optionElements[correctIndex].classList.add('correct');
+  optionElements.forEach((option, index) => {
+    if (option.textContent === correctAns) {
+      option.classList.add('correct');
+    }
+});
 }
 
 // Update progress bar
 function updateProgressBar() {
   const progress = (currentQuestion / quizData.length) * 100;
-  progressBar.style.width = `${progress}%`;
-}
-
-// Update progress bar based on correct answers
-function updateProgressBarForCorrectAnswer() {
-  const progress = (score / quizData.length) * 100;
   progressBar.style.width = `${progress}%`;
 }
 
@@ -441,26 +345,49 @@ function showResult() {
   scoreElement.textContent = `${score}/${quizData.length}`;
   
   let message = '';
+  let status = '';
   const percentage = (score / quizData.length) * 100;
   
   if (percentage >= 90) {
+      status = "Passed";
       message = "Excellent! You're a quiz master!";
   } else if (percentage >= 70) {
+      status = "Passed";
       message = "Great job! You have good knowledge!";
-  } else if (percentage >= 50) {
+  } else if (percentage >= 60) {
+      status = 'Passed'
       message = "Good effort! Keep learning!";
   } else {
+      status = 'Failed';
       message = "Keep practicing! You'll improve!";
   }
-  
+  storeAgentResponses({status});
   resultInfoElement.textContent = message;
+}
+
+async function storeAgentResponses(options = {}){
+  const percentage = (score / quizData.length) * 100;
+  const urlParams = new URLSearchParams(window.location.search);
+  const category = urlParams.get('category');
+  const data = {
+    "categoryType": category,
+    "country": category,
+    "currentQuestion": options.currentQuestion || currentQuestion,
+    "answerDetails": answerDetailsString,
+    "status": options.status || "In Progress",
+    "score": percentage,
+    "certificateDownloaded": options.certificateDownloaded || false,
+    "newAttempt": options.newAttempt || false
+  };
+  return await fetchPost('/submitresponse', data);
 }
 
 // Restart quiz
 function restartQuiz() {
   currentQuestion = 0;
   score = 0;
-  
+  answerDetailsString = [];
+  storeAgentResponses({newAttempt: true, currentQuestion: 1});
   resultContainer.style.display = 'none';
   quizBody.style.display = 'block';
   
@@ -468,5 +395,108 @@ function restartQuiz() {
   loadQuestion();
 }
 
-// Initialize the quiz when the page loads
-window.onload = initQuiz;
+function showToast(type, title, message, duration = 3000) {
+  const toastContainer = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+
+  let icon = '';
+  switch (type) {
+    case 'success':
+      icon = 'fa-circle-check';
+      break;
+    case 'error':
+      icon = 'fa-circle-xmark';
+      break;
+    case 'warning':
+      icon = 'fa-triangle-exclamation';
+      break;
+  }
+
+  toast.innerHTML = `
+        <i class="toast-icon fas ${icon}"></i>
+        <div class="toast-content">
+            <div class="toast-title">${title}</div>
+            <div class="toast-message">${message}</div>
+        </div>
+        <i class="toast-close fas fa-times"></i>
+    `;
+
+  toastContainer.appendChild(toast);
+
+  // Remove toast after animation
+  setTimeout(() => {
+    toast.remove();
+  }, duration);
+
+  // Close button functionality
+  toast.querySelector('.toast-close').addEventListener('click', () => {
+    toast.remove();
+  });
+}
+
+// async function downloadAsPn2g() {
+//   try {
+//     const element = document.createElement("div");
+//     element.style.position = "absolute";
+//     element.style.left = "-9999px";
+//     element.style.width = "1024px";
+//     element.style.height = "635px";
+//     document.body.appendChild(element);
+//     let certificateHTML = await fetchGet('/webinar/getcertificate/Greece', {}, {different : true, notjson : true} );
+//     certificateHTML = await certificateHTML.text();
+//     element.innerHTML = certificateHTML;
+//     await Promise.all(
+//       Array.from(element.querySelectorAll("img")).map(img =>
+//         img.complete ? Promise.resolve() :
+//         new Promise(resolve => {
+//           img.onload = img.onerror = resolve;
+//         })
+//       )
+//     );
+    
+//     const canvas = await html2canvas(element, {
+//       useCORS: true,
+//       backgroundColor: null,
+//       scale: 2 // for higher resolution
+//     });
+//     const image = canvas.toDataURL("image/png");
+
+//     const link = document.createElement("a");
+//     link.href = image;
+//     link.download = "certificate.png";
+//     // link.click();
+//   } catch (error) {
+//       console.error("Error downloading certificate:", error);
+//   }
+// }
+
+async function donwloadCertificate(category) {
+  try {
+    let certificatebuffer = await fetchGet('/webinar/getcertificate/Greece', {}, {different : true, notjson : true} );
+    const blob = await certificatebuffer.blob();
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'certificate.png';
+    link.click();
+  } catch (error) {
+      console.error("Error downloading certificate:", error);
+  }
+}
+
+async function previewCertificate(category){
+  try {
+    let certificateHTML = await fetchGet('/webinar/previewcertificate/Greece', {}, {different : true, notjson : true} );
+    const html = await certificateHTML.text();
+    const container = document.createElement('div');
+    container.innerHTML = html;
+    container.style.width = "1024px";
+    container.style.height = "635px";
+    container.style.overflow = "auto";
+    container.style.border = "1px solid #ccc";
+    container.style.margin = "20px auto";
+    document.body.appendChild(container);
+  } catch (error) {
+      console.error("Error downloading certificate:", error);
+  }
+}

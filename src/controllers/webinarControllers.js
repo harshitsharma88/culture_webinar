@@ -1,5 +1,6 @@
 const catchBlock = require("../errorHandlers/errorPrinting");
-const { executeStoredProcedure } = require("../config/dbExec")
+const { executeStoredProcedure } = require("../config/dbExec");
+const { renderEJS, generateCertificate } = require("../utils/helpers");
 
 const webinarController = {
     async renderWebinarHome(req, res, next){
@@ -17,6 +18,21 @@ const webinarController = {
             return res.status(200).json({webinars : result});
         } catch (error) {
             catchBlock(error, "Getting Webinar List.");
+        }
+    },
+    async getCertificate(req, res, next){
+        try {
+            const html = await renderEJS({agentname : "Test Test", countryname : "India", date : "May 01 2025", countrybatchname : "Greece"});
+            if(req.originalUrl.includes('/previewcertificate')){
+                res.set('Content-Type', 'text/html');
+                return res.send(html);
+            }
+            const certificate = await generateCertificate(html);
+            res.set('Content-Type', 'image/png');
+            res.set('Content-Disposition', 'inline; filename=certificate.png');
+            res.send(certificate);
+        } catch (error) {
+            catchBlock(error, "Rendering Certificate Page.");
         }
     }
 }
