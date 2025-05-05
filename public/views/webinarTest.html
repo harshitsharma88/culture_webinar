@@ -17,34 +17,35 @@
         crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/webinar/styles/webinarTest.css">
     <link rel="stylesheet" href="/webinar/styles/preview.css">
-    
+
 </head>
 
 <body>
     <!-- Preview Page Section -->
     <section class="preview-part">
         <img src="/webinar/assetts/logo-black.png" alt="Logo" class="icn-on-top-left-image">
-        
+
         <div class="icn-on-content-container">
             <div class="icn-on-left-content">
                 <div class="icn-on-country-name">Transformative Trip to India</div>
                 <div class="icn-on-quiz-description">
-                    Welcome to our interactive quiz experience! Test your knowledge and learn new facts with our carefully designed questions.
+                    Welcome to our interactive quiz experience! Test your knowledge and learn new facts with our
+                    carefully designed questions.
                 </div>
-                
-               <div class="all-gen-head">
-                <h1 class="icn-on-quiz-heading">General <br> Quiz</h1>
-                
-               </div>
-                
+
+                <div class="all-gen-head">
+                    <h1 class="icn-on-quiz-heading">General <br> Quiz</h1>
+
+                </div>
+
                 <!-- <div class="icn-on-country-description">
                     Explore the rich heritage, diverse culture, and fascinating history of India through this interactive quiz. From ancient civilizations to modern achievements, test your knowledge about the world's largest democracy.
                 </div> -->
-                
+
                 <button class="icn-on-btn icn-on-instructions-btn" onclick="openModal()">General Instructions</button>
                 <button class="icn-on-btn icn-on-start-btn">Start Quiz</button>
             </div>
-            
+
             <div class="icn-on-right-content">
                 <img src="/webinar/assetts/left-image.png" alt="Image 1" class="icn-on-aic-image-1">
                 <img src="/webinar/assetts/centre-images.png" alt="Image 2" class="icn-on-aic-image-2">
@@ -52,7 +53,7 @@
             </div>
         </div>
     </section>
-    
+
     <div id="instructionsModal" class="icn-on-modal">
         <div class="icn-on-modal-content">
             <span class="icn-on-close-btn" onclick="closeModal()">&times;</span>
@@ -66,7 +67,7 @@
             </ul>
         </div>
     </div>
-    <section class="start-test-part" >
+    <section class="start-test-part">
         <div class="container">
             <div class="quiz-part">
                 <div class="quiz-container">
@@ -101,7 +102,6 @@
                         </div>
                     </div>
 
-
                 </div>
 
                 <div class="result-container" id="result-container">
@@ -133,21 +133,21 @@
 </html>
 
 <script>
-      function openModal() {
-            document.getElementById("instructionsModal").style.display = "flex";
+    function openModal() {
+        document.getElementById("instructionsModal").style.display = "flex";
+    }
+
+    function closeModal() {
+        document.getElementById("instructionsModal").style.display = "none";
+    }
+
+    // Close modal if clicked outside the content
+    window.onclick = function (event) {
+        const modal = document.getElementById("instructionsModal");
+        if (event.target == modal) {
+            closeModal();
         }
-        
-        function closeModal() {
-            document.getElementById("instructionsModal").style.display = "none";
-        }
-        
-        // Close modal if clicked outside the content
-        window.onclick = function(event) {
-            const modal = document.getElementById("instructionsModal");
-            if (event.target == modal) {
-                closeModal();
-            }
-        }
+    }
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>

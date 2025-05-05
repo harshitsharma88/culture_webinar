@@ -425,3 +425,62 @@
         margin-bottom: 1rem;
     }
 }
+
+@media only screen and (min-width: 651px) and (max-width: 1060px) {
+    .web-category-icon {
+        display: none;
+    }
+    .web-category-tabs {
+       
+        gap: 9px;
+        flex-wrap: nowrap;
+
+    }
+    .web-category-name {
+        font-size: 12px;
+    }
+    .web-category-tab {
+        border-radius: 5px;
+    }
+    .web-all-web-cards-part {
+        margin: 1rem auto;
+    }
+    .web-registext {
+        color: rgb(122, 122, 122);
+        font-size: 14px;
+    }
+    .web-webinar-title {
+        font-size: 14px;  
+    }
+    .web-webinar-status {
+        font-size: 8px;
+        
+    }
+    .web-webinar-date {
+        font-weight: 600;
+        font-size: 12px;
+    }
+    .web-webinar-details {
+        padding: 10px 15px;
+    }
+    .web-btn-icon {
+        width: 12px;
+        height: 11px;
+    }
+    .web-webinar-image-container { 
+        height: 133px;
+        padding: 5px;
+    }
+  
+    .web-webinar-actions {
+       display: block;
+    }
+    .web-btn {
+
+        margin-top: 0.4rem;
+    }
+    .web-webinar-times {
+        font-size: 12px;
+        margin-bottom: 15px;
+    }
+}

@@ -381,3 +381,33 @@
  
 }
 }
+@media only screen and (min-width: 651px) and (max-width: 1060px) {
+  
+  .all-main-web-three {
+    margin: 0.5rem auto;
+
+  }
+  .wbt-heading {
+    font-size: 25px;
+   
+}
+.wbt-paragraph {
+  font-size: 14px;
+}
+.wb-second-part-all {
+  text-align: start;
+  padding: 0;
+}
+.websc-mainheading {
+  font-size: 22px;
+
+}
+.wbt-button {
+  padding: 10px 26px;
+  font-size: 14px;
+  
+}
+.webthv-intro-video-container {
+margin-top:2rem;
+}
+}

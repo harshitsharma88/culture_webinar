@@ -127,3 +127,9 @@
 .igi-next {
     right: 10%;
 }
+@media only screen and (min-width: 651px) and (max-width: 1060px) {
+    .igi-gallery-image {
+        height: 187px;
+       
+    }
+}

@@ -209,9 +209,7 @@
 }
 
 @media (max-width: 768px) {
-    .foot-content {
-        flex-direction: column;
-    }
+   
     
     .foot-section {
         width: 100%;

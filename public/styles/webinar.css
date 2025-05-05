@@ -196,14 +196,45 @@
   .wb-container {
     display: none;
   }
+
   .on-top-first {
     padding: 1rem 0;
     height: auto;
+  }
+
+  .wb-image-center {
+    display: none;
+  }
+
+  .wb-image-bottom {
+    display: none;
+  }
 }
-.wb-image-center {
- display: none;
+
+@media only screen and (min-width: 651px) and (max-width: 1060px) {
+  .on-top-first {
+    padding: 1rem 0rem;
+    height: auto;
+  }
+
+  .wb-heading {
+    font-size: 25px;
+  }
+
+  .wb-paragraph {
+    font-size: 1em;
+  }
+
+
+
+  .wb-image-center {
+    display: none;
+  }
+  .wb-bottom-left {
+    bottom: 7%;
+   
 }
-.wb-image-bottom {
- display: none;
+.wb-floating-image {
+  border-radius: 5px;
 }
 }

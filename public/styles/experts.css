@@ -96,3 +96,19 @@ font-family: Inter;
         font-weight: bold;
     }
 }
+@media only screen and (min-width: 651px) and (max-width: 1060px) {
+    .experts-section-four {
+        background: linear-gradient(135deg, #ffffff, #e6f2ff, #f0f8ff);
+        margin: 0rem auto;
+        height: auto;
+      
+    }
+    .experts-container {
+        gap: 20px;
+        flex-wrap: nowrap;
+    }
+    .expert-image img {
+        height: auto;
+    }
+  
+}
