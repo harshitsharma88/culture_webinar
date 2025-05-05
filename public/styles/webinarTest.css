@@ -5,6 +5,7 @@ body {
     justify-content: center;
     align-items: center;
     padding: 20px;
+    font-family: "Inter", sans-serif;
 }
 
 .quiz-container {
@@ -351,5 +352,19 @@ body {
         width: 0;
     }
 }
-
+.allresults-in{
+    display: flex;
+    align-items: center;
+}
 /* Toaster CSS end */
+.left-congrats,
+.right-congrats {
+    flex: 1;
+    text-align: center;
+}
+
+.left-congrats img,
+.right-congrats img {
+    max-width: 100%;
+    height: auto;
+}
