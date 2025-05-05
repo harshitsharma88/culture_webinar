@@ -8,6 +8,9 @@ const heplers = {
     generateToken ( data, options ){
         return jwt.sign(data, process.env.jsecret, options);
     },
+    verifyToken ( token ){
+        return jwt.verify(token, process.env.jsecret);
+    },
     async renderEJS(data, templatePath = 'src/template/certificateTemplate.ejs'){
         try {
             return await ejs.renderFile(resolve(templatePath), data);

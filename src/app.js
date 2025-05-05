@@ -5,6 +5,8 @@ const path = require("path");
 // Parse the form data and body from request
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '../', 'public/views'));
 
 // Routes
 const webinarRoutes = require("./routes/homeRoute");

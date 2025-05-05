@@ -1,6 +1,5 @@
 const catchBlock = require("../errorHandlers/errorPrinting");
 const { executeStoredProcedure } = require("../config/dbExec");
-const { param } = require("../app");
 
 const testControllers = {
     async renderTestPage(req, res, next){

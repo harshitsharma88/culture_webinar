@@ -26,29 +26,61 @@ window.addEventListener('load', async () => {
     const [{value: questions}, {value: webinarDetails}] = 
       await Promise.allSettled([getWebinarQuestionsCached(), getAppendWebinarDetailsQuestions()]);
     quizData = questions;
-    console.log(quizData);
-    initQuiz();
 });
 
+function startQuiz() {
+  if (quizData.length === 0) {
+    showToast('error', 'Error', 'Wait For Questions.');
+    return;
+  }
+  const testContainer = document.querySelector("section.start-test-part");
+  const previewContainer = document.querySelector("section.preview-part");
+  initQuiz();
+  testContainer.style.display = 'flex';
+  previewContainer.style.display = 'none';
+}
+
 async function fetchGet(url, headers = {}, options = {}){
-    const basePath = options.different ? '' : '/webinar/test';
-    url = basePath + url;
-    const response = await fetch(url, { headers :{ contentType: 'application/json', ...headers}});
-    return options.notjson ? response : await response.json();
+  try {
+      const basePath = options.different ? '' : '/webinar/test';
+      url = basePath + url;
+      const response = await fetch(url, { headers :{ 
+        contentType: 'application/json', 
+        "Authorization": sessionStorage.getItem('webitkn'),
+        ...headers}});
+      if (!response.ok && response.status == 401) {
+        // return location.replace('/');
+      }
+      const parsedResponse = options.notjson ? response : await response.json();
+      !options.notoken && sessionStorage.setItem('webitkn', response.headers.get('Authorization'));
+      return parsedResponse;
+  } catch (error) {
+    throw error; 
+  }
 }
 
 async function fetchPost(url, data , headers = {}, options = {}){
-    const basePath = options.different ? '' : '/webinar/test';
-    url = basePath + url;
-    const response = await fetch(url, 
-      {
-        method: 'POST', body: JSON.stringify(data), 
-        headers: {
-          'Content-Type': 'application/json',
-          ...headers
-        }
-      });
-    return options.notjson ? response : await response.json();
+    try{
+          const basePath = options.different ? '' : '/webinar/test';
+          url = basePath + url;
+          const response = await fetch(url, 
+            {
+              method: 'POST', body: JSON.stringify(data), 
+              headers: {
+                'Content-Type': 'application/json',
+                "Authorization": sessionStorage.getItem('webitkn'),
+                ...headers
+              }
+            });
+            if (!response.ok && response.status == 401) {
+              // return location.replace('/');
+            }
+          const parsedResponse = options.notjson ? response : await response.json();
+          !options.notoken && sessionStorage.setItem('webitkn', response.headers.get('Authorization'));
+          return parsedResponse;
+    } catch (error) {
+      throw error;
+    }
 }
 
 const getWebinarQuestionsCached = (() => {
@@ -66,14 +98,14 @@ const getWebinarQuestionsCached = (() => {
             triedOnce = true;
             showToast('error', 'Error', "Can't Get the Details");
             setTimeout(() => {
-                location.replace("/webinar");
+                // location.replace("/webinar");
             }, 3000);
             return;
         }
         if(!cachedData || cachedData.length == 0){
             showToast('error', 'Error', "No Question Found");
             setTimeout(() => {
-              location.replace("/webinar");
+              // location.replace("/webinar");
             }, 3000);
             return;
         }
@@ -93,7 +125,9 @@ async function getAppendWebinarDetailsQuestions(){
         return;
     } 
     try {
-        const response = await fetchGet(`/webinar/getwebinars?category=${category}`, {}, {different: true});
+        const {webinars} = await fetchGet(`/webinar/getwebinars?category=${category}`, {}, {different: true});
+        const quizCountryNameIcon = document.querySelector('div.icn-on-country-name');
+        quizCountryNameIcon.textContent = `Quiz On ${webinars[0].title}`;
     } catch (error) {
         console.log(error);
     }

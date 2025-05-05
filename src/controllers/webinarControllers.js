@@ -1,11 +1,14 @@
 const catchBlock = require("../errorHandlers/errorPrinting");
 const { executeStoredProcedure } = require("../config/dbExec");
-const { renderEJS, generateCertificate } = require("../utils/helpers");
+const { renderEJS, generateCertificate, generateToken} = require("../utils/helpers");
 
 const webinarController = {
     async renderWebinarHome(req, res, next){
         try {
-            res.sendFile(require("path").join(__dirname, "../../","/public/views/webinar.html"));
+            const uid = req.params.uid || null;
+            // if(!uid) return res.redirect("/");
+            const token = await webinarController.verifyUserAndCreateLogin(uid);
+            res.render("webinar", {token : token});
         } catch (error) {
             catchBlock(error, "Rendering Home Page.");
         }
@@ -28,10 +31,12 @@ const webinarController = {
             }
             const result = await executeStoredProcedure("USP_GetWebinarListChecking_AgentTestAttempt", 
                 [{name : "Agentid", value : req.agentinfo.agentid}, {name : "category_type", value : category}]);
-            if(result.length === 0 || !result[0].STATUS !== "Passed"){
+            if(result.length === 0 || result[0].STATUS !== "Passed"){
                 return res.status(400).json({message : "No certificate found."});
             }
-            const html = await renderEJS({agentname : "Test Test", countryname : "India", date : "May 01 2025", countrybatchname : "Greece"});
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateString = new Date(result[0].END_TIME).toLocaleDateString('en-US', options);
+            const html = await renderEJS({agentname : req.agentinfo.agentname, countryname : category, date : dateString, countrybatchname : category});
             if(req.originalUrl.includes('/previewcertificate')){
                 res.set('Content-Type', 'text/html');
                 return res.send(html);
@@ -39,9 +44,35 @@ const webinarController = {
             const certificate = await generateCertificate(html);
             res.set('Content-Type', 'image/png');
             res.set('Content-Disposition', 'inline; filename=certificate.png');
-            res.end(certificate); // ensure you're sending raw buffer
+            res.end(certificate);
         } catch (error) {
             catchBlock(error, "Rendering Certificate Page.");
+        }
+    },
+    async verifyUserAndCreateLogin(uid){
+        try {
+            // const params = [{name :"UserID", value : req.body.userid}, {name : "Password", value : req.body.password}];
+            // const result = await executeStoredProcedure("GetLoginAgentByUserId_V4", params);
+            // if(result.length === 0) return res.status(403).json({message : "Invalid Credentials."});
+            // const data = {username : result[0].UserName, 
+            //     agentid : result[0].AgentID, 
+            //     agentname : result[0].Name, 
+            //     email : result[0].Emailid,
+            //     comp_name : result[0].Comp_Name
+            // };
+
+            const data = {
+                username : "ashish.bhasin@travelchacha.com", 
+                agentid : "chagt000003780", 
+                agentname : "Ashish Bhasin", 
+                emailid : "developer@cultureholidays.com",
+                comp_name : "Culture Holidays123"
+            };
+            const jwtToken = generateToken({agentData : data}, {expiresIn: '5m'});
+            return jwtToken;
+        } catch (error) {
+            catchBlock(error, "Verifying User and Creating Login.");
+            return null;
         }
     }
 }

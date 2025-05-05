@@ -196,7 +196,7 @@ body {
 
 .result-container {
     text-align: center;
-    padding: 40px;
+    padding: 35px 9px;
     display: none;
 }
 
@@ -364,6 +364,7 @@ body {
 }
 .allresults-in{
     display: flex;
+    gap: 1rem;
     align-items: center;
 }
 /* Toaster CSS end */

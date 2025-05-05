@@ -2,19 +2,50 @@ window.addEventListener('DOMContentLoaded',async (event) => {
     await getAndAppendWebinars();
 });
 
-
 async function fetchGet(url, headers = {}, options = {}){
-    const basePath = options.different ? '' : '/webinar';
-    url = basePath + url;
-    const response = await fetch(url, {contentType: 'application/json', ...headers});
-    return options.notjson ? response : await response.json();
+    try {
+        const basePath = options.different ? '' : '/webinar';
+        url = basePath + url;
+        const webitkn = sessionStorage.getItem('webitkn');
+        const response = await fetch(url, 
+            {headers : {
+                contentType: 'application/json',
+                "Authorization": webitkn,
+                 ...headers
+                }
+            });
+        if (!response.ok && response.status == 401) {
+            return location.replace('/');
+        }
+        const parsedResponse = options.notjson ? response : await response.json();
+        !options.notoken && sessionStorage.setItem('webitkn', response.headers.get('Authorization'));
+        return parsedResponse;
+    } catch (error) {
+        throw error;
+    }
 }
 
 async function fetchPost(url, data , headers = {}, options = {}){
-    const basePath = options.different ? '' : '/webinar';
-    url = basePath + url;
-    const response = await fetch(url, {method: 'POST', body: JSON.stringify(data), contentType: 'application/json', ...headers});
-    return options.notjson ? response : await response.json();
+    try {
+        const basePath = options.different ? '' : '/webinarn';
+        url = basePath + url;
+        const response = await fetch(url, 
+            {   method: 'POST', 
+                body: JSON.stringify(data), 
+                headers:{
+                    contentType: 'application/json',
+                    "Authorization": sessionStorage.getItem('webitkn'), 
+                    ...headers}
+            });
+        if (!response.ok && response.status == 401) {
+            return location.replace('/');
+        }
+        const parsedResponse = options.notjson ? response : await response.json();
+        !options.notoken && sessionStorage.setItem('webitkn', response.headers.get('Authorization'));
+        return parsedResponse;
+    } catch (error) {
+        throw error;
+    }
 }
 
 async function getAndAppendWebinars(){
@@ -144,7 +175,7 @@ function giveTestGetCertificateButton(webinar, currentStatus){
 async function donwloadCertificate(category) {
     console.log("Downloading certificate for category:", category);
     try {
-      let certificatebuffer = await fetchGet(`/getcertificate/Greece`, {}, {notjson : true} );
+      let certificatebuffer = await fetchGet(`/getcertificate/${category}`, {}, {notjson : true} );
       const blob = await certificatebuffer.blob();
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
