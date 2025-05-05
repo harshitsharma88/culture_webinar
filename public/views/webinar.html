@@ -31,15 +31,20 @@
 <body>
     <header class="wbh-header">
         <div class="wbh-logo">
-            <div class="wbh-logo-icon"><img src="/webinar/assetts/logo-black.png" alt=""></div>
-
+            <div class="wbh-logo-icon"><img src="/webinar/assetts/logo-black.png" alt="Logo"></div>
         </div>
-
+    
+        <div class="wbh-hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    
         <nav class="wbh-nav">
             <a href="#" class="wbh-nav-item">Home</a>
             <a href="#" class="wbh-nav-item">Tour</a>
             <div class="wbh-about-container">
-                <a href="#" class="wbh-nav-item">About Us</a>
+                <a href="#" class="wbh-nav-item" onclick="toggleAboutDropdown(event)">About Us</a>
                 <div class="wbh-dropdown">
                     <ul class="wbh-dropdown-list">
                         <li><a href="#" class="wbh-dropdown-item">Who Are We</a></li>
@@ -49,8 +54,8 @@
                 </div>
             </div>
         </nav>
-
     </header>
+    
 
     <!-- Section-first -->
     <section class="on-top-first">
@@ -745,6 +750,24 @@
                 modal.style.display = 'none';
             }
         }
+
+
+        function toggleMenu() {
+        const hamburger = document.querySelector('.wbh-hamburger');
+        const nav = document.querySelector('.wbh-nav');
+        
+        hamburger.classList.toggle('active');
+        nav.classList.toggle('active');
+    }
+    
+    function toggleAboutDropdown(event) {
+        // Only for mobile view
+        if (window.innerWidth <= 650) {
+            event.preventDefault();
+            const aboutContainer = document.querySelector('.wbh-about-container');
+            aboutContainer.classList.toggle('active');
+        }
+    }
     </script>
 
     <script src="/webinar/scripts/webinar.js"></script>
