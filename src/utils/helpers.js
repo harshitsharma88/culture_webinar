@@ -15,7 +15,7 @@ const heplers = {
             catchBlock(error, "Rendering EJS");
         }
     },
-    
+
     async generateCertificate(html){
         let browser;
         try {
@@ -39,7 +39,7 @@ const heplers = {
     
         } catch (err) {
             console.error('Error rendering image:', err);
-            res.status(500).send('Failed to generate image');
+            return null;
         } finally {
             if (browser) await browser.close();
         }

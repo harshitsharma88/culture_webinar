@@ -13,8 +13,16 @@ const testControllers = {
     },
     async getWebinarQuestions(req, res, next){
         try {
-            const result = await executeStoredProcedure('usp_GetWebinarQuestions', [{name : "Country", value : req.query.category}]);
-            return res.status(200).json({questions : result});
+            const category = req.query.category;
+            const agentTestDetails_Promise = executeStoredProcedure("USP_GetWebinarListChecking_AgentTestAttempt", 
+                [{name : "Agentid", value : req.agentinfo.agentid}, {name : "category_type", value : category}]);
+            const resultQuestions_Promise = executeStoredProcedure('usp_GetWebinarQuestions', [{name : "Country", value : category}]);
+            const [{value : agentTestDetails}, {value : questions}] 
+                = await Promise.allSettled([agentTestDetails_Promise, resultQuestions_Promise]);
+            if(Array.isArray(agentTestDetails) && agentTestDetails.length > 0 && agentTestDetails[0].STATUS === "Passed"){
+                return res.status(409).json({message : "You have already passed the test"});
+            }
+            return res.status(200).json({questions});
         } catch (error) {
             catchBlock(error, "Getting Questions", res);
         }

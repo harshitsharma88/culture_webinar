@@ -7,14 +7,14 @@ async function fetchGet(url, headers = {}, options = {}){
     const basePath = options.different ? '' : '/webinar';
     url = basePath + url;
     const response = await fetch(url, {contentType: 'application/json', ...headers});
-    return await response.json();
+    return options.notjson ? response : await response.json();
 }
 
 async function fetchPost(url, data , headers = {}, options = {}){
     const basePath = options.different ? '' : '/webinar';
     url = basePath + url;
     const response = await fetch(url, {method: 'POST', body: JSON.stringify(data), contentType: 'application/json', ...headers});
-    return await response.json();
+    return options.notjson ? response : await response.json();
 }
 
 async function getAndAppendWebinars(){
@@ -110,6 +110,7 @@ function giveTestGetCertificateButton(webinar, currentStatus){
     if(webinar.test_exists && currentStatus == 'past'){
         if(webinar.STATUS == 'Passed'){
             return `<button class="web-btn web-btn-secondary web-tooltip"
+                onclick="donwloadCertificate('${webinar.country}')" 
                 data-tooltip="Download Certificate">
                 <svg class="web-btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -124,7 +125,7 @@ function giveTestGetCertificateButton(webinar, currentStatus){
         }
         // Else give option of giving test
         return `<button class="web-btn web-btn-secondary web-tooltip"
-            data-tooltip="Get your certificate">
+            data-tooltip="Get your certificate" onclick="location.href='/webinar/test?category=${webinar.country}'">
             <svg class="web-btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                 stroke-linejoin="round">
@@ -139,3 +140,17 @@ function giveTestGetCertificateButton(webinar, currentStatus){
     };
 }
 
+
+async function donwloadCertificate(category) {
+    console.log("Downloading certificate for category:", category);
+    try {
+      let certificatebuffer = await fetchGet(`/getcertificate/Greece`, {}, {notjson : true} );
+      const blob = await certificatebuffer.blob();
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'certificate.png';
+      link.click();
+    } catch (error) {
+        console.error("Error downloading certificate:", error);
+    }
+  }
