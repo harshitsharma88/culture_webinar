@@ -344,7 +344,18 @@
 .replay-modal-close:hover {
   color: #000;
 }
+.replay-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 
+.replay-form-group label {
+  font-size: 0.9em;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-left: 3px;
+}
 @media (max-width: 500px) {
   .replay-registration-modal {
     padding: 20px;

@@ -223,7 +223,7 @@
 
                     <div class="web-webinars-grid" id="all-webinars">
 
-                      <!--  <div class="web-webinar-card" data-category="past">
+                        <!--  <div class="web-webinar-card" data-category="past">
                             <div class="web-webinar-image-container">
                                 <img src="/webinar/assetts/dubai.jpg" alt="Greece Expert Webinar"
                                     class="web-webinar-image">
@@ -584,27 +584,54 @@
     </section>
     <div class="replay-modal-overlay" id="replay-registration-overlay">
         <div class="replay-registration-modal">
-          <button class="replay-modal-close" onclick="closeReplayRegistrationModal()">&times;</button>
-      
-
-          <div class="replay-modal-image-container">
-            <img src="your-image.jpg" onerror="this.parentElement.style.display='none'" alt="Webinar" class="replay-modal-image" />
-          </div>
-      
-          <h2>Webinar Registration</h2>
-          <p class="replay-webi-desc" id="replay-webi-desc">
-            Join us to learn more about our latest offering!
-          </p>
-      
-          <form>
-            <input type="text" id="name" name="name" placeholder="Your Name" value="<%= agentname %>">
-            <input type="email" id="email" name="email" placeholder="Your Email" value="<%= agentemail %>">
-            <input type="text" id="company" name="company" placeholder="Company Name" value="<%= agentcompany %>">
-            <input type="text" id="hostAgency" name="hostAgency" placeholder="Host Agency">
-            <button type="submit" class="replay-modal-submit">Submit</button>
-          </form>
+            <button class="replay-modal-close" onclick="closeReplayRegistrationModal()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+    
+            <div class="replay-modal-image-container">
+                <img src="your-image.jpg" onerror="this.parentElement.style.display='none'" alt="Webinar"
+                    class="replay-modal-image" />
+            </div>
+    
+            <h2>Webinar Registration</h2>
+            <p class="replay-webi-desc" id="replay-webi-desc">
+                Join us to learn more about our latest offering!
+            </p>
+    
+            <form class="replay-registration-form">
+                <div class="replay-form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your full name" value="<%= agentname %>">
+                </div>
+                
+                <div class="replay-form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email address" value="<%= agentemail %>">
+                </div>
+                
+                <div class="replay-form-group">
+                    <label for="company">Company Name</label>
+                    <input type="text" id="company" name="company" placeholder="Enter your company name" value="<%= agentcompany %>">
+                </div>
+                
+                <div class="replay-form-group">
+                    <label for="hostAgency">Host Agency</label>
+                    <input type="text" id="hostAgency" name="hostAgency" placeholder="Enter your host agency">
+                </div>
+                
+                <button type="submit" class="replay-modal-submit">
+                    Register Now
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="replay-submit-icon">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </button>
+            </form>
         </div>
-      </div>
+    </div>
 
     <script>
 
