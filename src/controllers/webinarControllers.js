@@ -7,8 +7,13 @@ const webinarController = {
         try {
             const uid = req.params.uid || null;
             // if(!uid) return res.redirect("/");
-            const token = await webinarController.verifyUserAndCreateLogin(uid);
-            res.render("webinar", {token : token});
+            const {jwtToken, data} = await webinarController.verifyUserAndCreateLogin(uid);
+            res.render("webinar", {
+                token : jwtToken, 
+                agentname : data.agentname, 
+                agentemail : data.emailid,
+                agentcompany : data.comp_name
+            });
         } catch (error) {
             catchBlock(error, "Rendering Home Page.");
         }
@@ -69,10 +74,17 @@ const webinarController = {
                 comp_name : "Culture Holidays123"
             };
             const jwtToken = generateToken({agentData : data}, {expiresIn: '5m'});
-            return jwtToken;
+            return {jwtToken, data};
         } catch (error) {
             catchBlock(error, "Verifying User and Creating Login.");
             return null;
+        }
+    },
+    async submitReplayURLrequest(req, res, next){
+        try {
+
+        } catch (error) {
+            catchBlock(error, "Submitting Replay URL request.");
         }
     }
 }

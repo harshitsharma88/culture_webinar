@@ -162,18 +162,7 @@ function makeWebinarCards(webinarsArray){
                                 
                             </div>
                             <div class="web-webinar-actions">
-                                <button class="web-btn web-btn-primary web-tooltip"
-                                    data-tooltip="Register for this webinar">
-                                    <svg class="web-btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round">
-                                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                        <circle cx="8.5" cy="7" r="4"></circle>
-                                        <line x1="20" y1="8" x2="20" y2="14"></line>
-                                        <line x1="23" y1="11" x2="17" y2="11"></line>
-                                    </svg>
-                                    Register Now
-                                </button>
+                                ${webinarActionButton}
                                 ${giveTestGetCertificateButtonText}
                             </div>
                         </div>
@@ -210,7 +199,31 @@ function getWebinarStatus(webinar, currentStatus){
         : `<div class="web-webinar-status web-status-upcoming">Upcoming</div>`;
 }
 
-function getWebinarActionButton(webinar){
+function getWebinarActionButton(webinar, currentStatus){
+   return currentStatus == 'past' ? 
+            `<button class="web-btn web-btn-primary web-tooltip"
+                    data-tooltip="Watch the recorded session"
+                    onclick="getReplayLink(this, '${webinar.webid}')">
+                    <svg class="web-btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    Get the Replay
+                </button>` 
+                                    
+        : `<button class="web-btn web-btn-primary web-tooltip"
+                data-tooltip="Register for this webinar">
+                <svg class="web-btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="8.5" cy="7" r="4"></circle>
+                    <line x1="20" y1="8" x2="20" y2="14"></line>
+                    <line x1="23" y1="11" x2="17" y2="11"></line>
+                </svg>
+                Register Now
+            </button>`;
 
 }
 
@@ -250,7 +263,6 @@ function giveTestGetCertificateButton(webinar, currentStatus){
 
 async function donwloadCertificate(element, category) {
     try {
-        console.log(element);
         const originalTextSpan = element;
         const originalHTML = originalTextSpan.innerHTML;
         element.classList.add('loading');
@@ -266,4 +278,18 @@ async function donwloadCertificate(element, category) {
     } catch (error) {
         console.error("Error downloading certificate:", error);
     }
-  }
+}
+
+async function getReplayLink(element, webinarid){
+    const replayRegistModal = document.getElementById('replay-registration-overlay');
+    try {
+        replayRegistModal.style.display = 'flex';
+    } catch (error) {
+        console.error("Replay Registration:", error);
+    }
+}
+
+function closeReplayRegistrationModal() {
+    const replayRegistModal = document.getElementById('replay-registration-overlay');
+    replayRegistModal.style.display = 'none';
+}

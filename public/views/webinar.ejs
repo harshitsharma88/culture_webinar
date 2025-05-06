@@ -582,9 +582,32 @@
             </div>
         </footer>
     </section>
+    <div class="replay-modal-overlay" id="replay-registration-overlay">
+        <div class="replay-registration-modal">
+          <button class="replay-modal-close" onclick="closeReplayRegistrationModal()">&times;</button>
+      
+
+          <div class="replay-modal-image-container">
+            <img src="your-image.jpg" onerror="this.parentElement.style.display='none'" alt="Webinar" class="replay-modal-image" />
+          </div>
+      
+          <h2>Webinar Registration</h2>
+          <p class="replay-webi-desc" id="replay-webi-desc">
+            Join us to learn more about our latest offering!
+          </p>
+      
+          <form>
+            <input type="text" id="name" name="name" placeholder="Your Name" value="<%= agentname %>">
+            <input type="email" id="email" name="email" placeholder="Your Email" value="<%= agentemail %>">
+            <input type="text" id="company" name="company" placeholder="Company Name" value="<%= agentcompany %>">
+            <input type="text" id="hostAgency" name="hostAgency" placeholder="Host Agency">
+            <button type="submit" class="replay-modal-submit">Submit</button>
+          </form>
+        </div>
+      </div>
 
     <script>
-        // Open modal on click
+
         document.addEventListener('DOMContentLoaded', function () {
             const videoTrigger = document.getElementById('webthv-video-trigger');
             const videoModal = document.getElementById('webthv-video-modal');

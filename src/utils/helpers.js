@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const ejs = require("ejs");
 const catchBlock = require("../errorHandlers/errorPrinting");
 const {resolve} = require("path");
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
 
 const heplers = {
     generateToken ( data, options ){
@@ -23,8 +23,10 @@ const heplers = {
         let browser;
         try {
             browser = await puppeteer.launch({
-                headless: 'new',
-                args: ['--no-sandbox', '--disable-setuid-sandbox']
+                executablePath: require("path").join('C:', 'Program Files', 'Google', 'Chrome', 'Application', 'chrome.exe'),
+                headless: true,
+                args: ['--no-sandbox', '--disable-setuid-sandbox'],
+                timeout: 60000,
             });
     
             const page = await browser.newPage();
