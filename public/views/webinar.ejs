@@ -223,7 +223,7 @@
 
                     <div class="web-webinars-grid" id="all-webinars">
 
-                        <div class="web-webinar-card" data-category="past">
+                      <!--  <div class="web-webinar-card" data-category="past">
                             <div class="web-webinar-image-container">
                                 <img src="/webinar/assetts/dubai.jpg" alt="Greece Expert Webinar"
                                     class="web-webinar-image">
@@ -432,7 +432,7 @@
                                     </button>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
 
                     <div class="web-empty-message web-hidden">No webinars found in this category.</div>
@@ -626,85 +626,6 @@
                 }
             });
 
-        });
-        document.addEventListener('DOMContentLoaded', function () {
-            // Select elements
-            const categoryTabs = document.querySelectorAll('.web-category-tab');
-            const webinarCards = document.querySelectorAll('.web-webinar-card');
-            const emptyMessage = document.querySelector('.web-empty-message');
-
-            // Initialize with staggered animation for initial load
-            animateCardsSequentially();
-
-            // Add click event listeners to category tabs
-            categoryTabs.forEach(tab => {
-                tab.addEventListener('click', function () {
-                    // Update active tab styling
-                    categoryTabs.forEach(t => t.classList.remove('web-active'));
-                    this.classList.add('web-active');
-
-                    // Get selected category
-                    const category = this.getAttribute('data-category');
-                    let visibleCards = 0;
-
-                    // Fade out all cards first
-                    const webinarsGrid = document.querySelector('.web-webinars-grid');
-                    webinarsGrid.style.opacity = '0';
-                    webinarsGrid.style.transform = 'translateY(20px)';
-
-                    setTimeout(() => {
-                        // Filter cards based on category
-                        webinarCards.forEach(card => {
-                            const cardCategory = card.getAttribute('data-category');
-                            // Reset animation delays
-                            card.style.transitionDelay = '0s';
-
-                            if (category === 'all' || category === cardCategory) {
-                                card.style.display = 'flex';
-                                card.classList.remove('web-hidden');
-                                visibleCards++;
-                            } else {
-                                card.style.display = 'none';
-                                card.classList.add('web-hidden');
-                            }
-                        });
-
-                        // Show/hide empty message
-                        if (visibleCards === 0) {
-                            emptyMessage.classList.remove('web-hidden');
-                        } else {
-                            emptyMessage.classList.add('web-hidden');
-                        }
-
-                        // Show grid container first
-                        webinarsGrid.style.opacity = '1';
-                        webinarsGrid.style.transform = 'translateY(0)';
-
-                        // Then animate cards sequentially
-                        setTimeout(() => {
-                            animateCardsSequentially();
-                        }, 100);
-
-                    }, 300);
-                });
-            });
-
-            // Function to animate cards with staggered delay
-            function animateCardsSequentially() {
-                const visibleCards = Array.from(webinarCards).filter(card => !card.classList.contains('web-hidden'));
-
-                visibleCards.forEach((card, index) => {
-                    card.style.opacity = '0';
-                    card.style.transform = 'translateY(30px)';
-                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                    card.style.transitionDelay = `${index * 0.15}s`;
-
-                    setTimeout(() => {
-                        card.style.opacity = '1';
-                        card.style.transform = 'translateY(0)';
-                    }, 50);
-                });
-            }
         });
     </script>
     <script>

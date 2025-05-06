@@ -397,6 +397,18 @@ function showResult() {
   }
   storeAgentResponses({status});
   resultInfoElement.textContent = message;
+  // previewCertificateIcon();
+}
+
+async function previewCertificateIcon(){
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const category = urlParams.get('category');
+    const container = await previewCertificate(category);
+    console.log(container);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 async function storeAgentResponses(options = {}){
@@ -469,42 +481,6 @@ function showToast(type, title, message, duration = 3000) {
   });
 }
 
-// async function downloadAsPn2g() {
-//   try {
-//     const element = document.createElement("div");
-//     element.style.position = "absolute";
-//     element.style.left = "-9999px";
-//     element.style.width = "1024px";
-//     element.style.height = "635px";
-//     document.body.appendChild(element);
-//     let certificateHTML = await fetchGet('/webinar/getcertificate/Greece', {}, {different : true, notjson : true} );
-//     certificateHTML = await certificateHTML.text();
-//     element.innerHTML = certificateHTML;
-//     await Promise.all(
-//       Array.from(element.querySelectorAll("img")).map(img =>
-//         img.complete ? Promise.resolve() :
-//         new Promise(resolve => {
-//           img.onload = img.onerror = resolve;
-//         })
-//       )
-//     );
-    
-//     const canvas = await html2canvas(element, {
-//       useCORS: true,
-//       backgroundColor: null,
-//       scale: 2 // for higher resolution
-//     });
-//     const image = canvas.toDataURL("image/png");
-
-//     const link = document.createElement("a");
-//     link.href = image;
-//     link.download = "certificate.png";
-//     // link.click();
-//   } catch (error) {
-//       console.error("Error downloading certificate:", error);
-//   }
-// }
-
 async function donwloadCertificate(category) {
   try {
     let certificatebuffer = await fetchGet('/webinar/getcertificate/Greece', {}, {different : true, notjson : true} );
@@ -520,7 +496,7 @@ async function donwloadCertificate(category) {
 
 async function previewCertificate(category){
   try {
-    let certificateHTML = await fetchGet('/webinar/previewcertificate/Greece', {}, {different : true, notjson : true} );
+    let certificateHTML = await fetchGet(`/webinar/previewcertificate/${category}`, {}, {different : true, notjson : true} );
     const html = await certificateHTML.text();
     const container = document.createElement('div');
     container.innerHTML = html;
@@ -529,7 +505,8 @@ async function previewCertificate(category){
     container.style.overflow = "auto";
     container.style.border = "1px solid #ccc";
     container.style.margin = "20px auto";
-    document.body.appendChild(container);
+    return container;
+    // document.body.appendChild(container);
   } catch (error) {
       console.error("Error downloading certificate:", error);
   }

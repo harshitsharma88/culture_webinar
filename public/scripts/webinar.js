@@ -52,9 +52,86 @@ async function getAndAppendWebinars(){
     try {
     const {webinars} = await fetchGet('/getwebinars');
     makeWebinarCards(webinars);
+    attachWebinarFilter();
     } catch (error) {
         console.log(error);
     }
+}
+
+function attachWebinarFilter () {
+    // Select elements
+    const categoryTabs = document.querySelectorAll('.web-category-tab');
+    const webinarCards = document.querySelectorAll('.web-webinar-card');
+    const emptyMessage = document.querySelector('.web-empty-message');
+
+    // Add click event listeners to category tabs
+    categoryTabs.forEach(tab => {
+        tab.addEventListener('click', function () {
+            // Update active tab styling
+            categoryTabs.forEach(t => t.classList.remove('web-active'));
+            this.classList.add('web-active');
+
+            // Get selected category
+            const category = this.getAttribute('data-category');
+            let visibleCards = 0;
+
+            // Fade out all cards first
+            const webinarsGrid = document.querySelector('.web-webinars-grid');
+            webinarsGrid.style.opacity = '0';
+            webinarsGrid.style.transform = 'translateY(20px)';
+
+            setTimeout(() => {
+                // Filter cards based on category
+                webinarCards.forEach(card => {
+                    const cardCategory = card.getAttribute('data-category');
+                    // Reset animation delays
+                    card.style.transitionDelay = '0s';
+
+                    if (category === 'all' || category === cardCategory) {
+                        card.style.display = 'flex';
+                        card.classList.remove('web-hidden');
+                        visibleCards++;
+                    } else {
+                        card.style.display = 'none';
+                        card.classList.add('web-hidden');
+                    }
+                });
+
+                // Show/hide empty message
+                if (visibleCards === 0) {
+                    emptyMessage.classList.remove('web-hidden');
+                } else {
+                    emptyMessage.classList.add('web-hidden');
+                }
+
+                // Show grid container first
+                webinarsGrid.style.opacity = '1';
+                webinarsGrid.style.transform = 'translateY(0)';
+
+                // Then animate cards sequentially
+                setTimeout(() => {
+                    animateCardsSequentially(webinarCards);
+                }, 100);
+
+            }, 300);
+        });
+    });
+}
+
+function animateCardsSequentially(webinarCards) {
+    const visibleCards = Array.from(webinarCards).filter(card => !card.classList.contains('web-hidden'));
+
+    visibleCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        card.style.transitionDelay = `${index * 0.15}s`;
+
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, 50);
+    });
 }
 
 function makeWebinarCards(webinarsArray){
@@ -66,10 +143,10 @@ function makeWebinarCards(webinarsArray){
                 webinarsArray.forEach(webinar => {
                     const {dateString, timezones, agentAction, 
                         certificateDownloaded, giveTestGetCertificateButtonText, 
-                        webinarActionButton, webinarStatus} 
+                        webinarActionButton, webinarStatus, currentStatus} 
                         = getDynamicElements(webinar);
 
-                    cards += `<div class="web-webinar-card" data-category="upcoming" data-id="${webinar.webid}">
+                    cards += `<div class="web-webinar-card" data-category="${currentStatus}" data-id="${webinar.webid}">
                         <div class="web-webinar-image-container">
                             <img src="/webinar/assetts/bali.jpg" alt="France Expert Webinar"
                                 class="web-webinar-image">
@@ -124,7 +201,7 @@ function getDynamicElements(webinar){
     const webinarStatus = getWebinarStatus(webinar, currentStatus);
     const webinarActionButton = getWebinarActionButton(webinar, currentStatus);
     const giveTestGetCertificateButtonText = giveTestGetCertificateButton(webinar, currentStatus);
-    return {dateString, timezones, agentAction, certificateDownloaded, giveTestGetCertificateButtonText, webinarActionButton, webinarStatus};
+    return {dateString, timezones, agentAction, certificateDownloaded, giveTestGetCertificateButtonText, webinarActionButton, webinarStatus, currentStatus};
 }
 
 function getWebinarStatus(webinar, currentStatus){
@@ -141,7 +218,7 @@ function giveTestGetCertificateButton(webinar, currentStatus){
     if(webinar.test_exists && currentStatus == 'past'){
         if(webinar.STATUS == 'Passed'){
             return `<button class="web-btn web-btn-secondary web-tooltip"
-                onclick="donwloadCertificate('${webinar.country}')" 
+                onclick="donwloadCertificate(this, '${webinar.country}')" 
                 data-tooltip="Download Certificate">
                 <svg class="web-btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -171,15 +248,20 @@ function giveTestGetCertificateButton(webinar, currentStatus){
     };
 }
 
-
-async function donwloadCertificate(category) {
-    console.log("Downloading certificate for category:", category);
+async function donwloadCertificate(element, category) {
     try {
-      let certificatebuffer = await fetchGet(`/getcertificate/${category}`, {}, {notjson : true} );
+        console.log(element);
+        const originalTextSpan = element;
+        const originalHTML = originalTextSpan.innerHTML;
+        element.classList.add('loading');
+       originalTextSpan.textContent = 'Downloading...';
+      let certificatebuffer = await fetchGet(`/getcertificate/${category}`, {}, {notjson : true, notoken : true} );
       const blob = await certificatebuffer.blob();
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
       link.download = 'certificate.png';
+      element.classList.remove('loading');
+      originalTextSpan.innerHTML = originalHTML;
       link.click();
     } catch (error) {
         console.error("Error downloading certificate:", error);
