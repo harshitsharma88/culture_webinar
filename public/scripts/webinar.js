@@ -2,6 +2,45 @@ window.addEventListener('DOMContentLoaded',async (event) => {
     await getAndAppendWebinars();
 });
 
+function showToast(type, title, message, duration = 3000) {
+    const toastContainer = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+
+    let icon = '';
+    switch (type) {
+        case 'success':
+        icon = 'fa-circle-check';
+        break;
+        case 'error':
+        icon = 'fa-circle-xmark';
+        break;
+        case 'warning':
+        icon = 'fa-triangle-exclamation';
+        break;
+    }
+
+    toast.innerHTML = `
+            <i class="toast-icon fas ${icon}"></i>
+            <div class="toast-content">
+                <div class="toast-title">${title}</div>
+                <div class="toast-message">${message}</div>
+            </div>
+            <i class="toast-close fas fa-times"></i>
+        `;
+
+    toastContainer.appendChild(toast);
+    // Remove toast after animation
+    setTimeout(() => {
+        toast.remove();
+    }, duration);
+
+    // Close button functionality
+    toast.querySelector('.toast-close').addEventListener('click', () => {
+        toast.remove();
+    });
+}
+
 async function fetchGet(url, headers = {}, options = {}){
     try {
         const basePath = options.different ? '' : '/webinar';
@@ -27,13 +66,13 @@ async function fetchGet(url, headers = {}, options = {}){
 
 async function fetchPost(url, data , headers = {}, options = {}){
     try {
-        const basePath = options.different ? '' : '/webinarn';
+        const basePath = options.different ? '' : '/webinar';
         url = basePath + url;
         const response = await fetch(url, 
             {   method: 'POST', 
                 body: JSON.stringify(data), 
                 headers:{
-                    contentType: 'application/json',
+                    'Content-Type': 'application/json',
                     "Authorization": sessionStorage.getItem('webitkn'), 
                     ...headers}
             });
@@ -50,11 +89,62 @@ async function fetchPost(url, data , headers = {}, options = {}){
 
 async function getAndAppendWebinars(){
     try {
-    const {webinars} = await fetchGet('/getwebinars');
-    makeWebinarCards(webinars);
-    attachWebinarFilter();
+        await showUpcomingWebinarAnimation();
+        const {webinars} = await fetchGet('/getwebinars');
+        makeWebinarCards(webinars);
+        attachWebinarFilter();
     } catch (error) {
         console.log(error);
+    }
+}
+
+async function showUpcomingWebinarAnimation(){
+    try {
+        const {webinars} = await fetchGet('/getwebinars?upcoming=true');
+        if (Array.isArray(webinars) && webinars.length > 0) {
+            const latestWebinar = webinars[0];
+            const [year, month, day] = latestWebinar.web_date.split('-');
+            const webinarDate = new Date(year, month - 1, day);
+            const options = { weekday: 'long', month: 'long', day: 'numeric' };
+            const dateString = webinarDate.toLocaleDateString('en-US', options);
+            latestWebinar.dateString = dateString;
+            makeUpcomingWebinarAnimation(latestWebinar)
+        }else{
+            // in condition if there is no upcoming webinar then show the different div
+            document.querySelector(".all-new-blue");
+        }
+    } catch (error) {
+        
+    }
+}
+
+function makeUpcomingWebinarAnimation(latestWebinar){
+    try {
+            const textEl = document.querySelector('.pre-new-rotating-text');
+            const webinarTime = latestWebinar.web_time?.split(',').find(time => time.toLowerCase().includes("est"));
+            let index = 0;
+            const texts = [
+                latestWebinar.title,
+                latestWebinar.dateString,
+                webinarTime,
+                `Duration 1 Hour <span class="pre-new-small">(approximately)</span>`
+            ];
+    
+            setInterval(() => {
+                textEl.classList.remove('pre-new-show'); 
+    
+                setTimeout(() => {
+                    index = (index + 1) % texts.length;
+                    textEl.innerHTML = texts[index];
+                    textEl.classList.add('pre-new-show'); 
+                }, 500); 
+            }, 3000);
+
+            const belowUpcomingDateBlueSection = document.querySelector(".all-new-blue");
+            belowUpcomingDateBlueSection.querySelector(".blue-time").innerHTML = webinarTime;
+            belowUpcomingDateBlueSection.querySelector(".blue-date").innerHTML = latestWebinar.dateString;
+    } catch (error) {
+        
     }
 }
 

@@ -1,6 +1,7 @@
 const catchBlock = require("../errorHandlers/errorPrinting");
 const { executeStoredProcedure } = require("../config/dbExec");
 const { renderEJS, generateCertificate, generateToken} = require("../utils/helpers");
+const { sendMail } = require("../utils/mailService");
 
 const webinarController = {
     async renderWebinarHome(req, res, next){
@@ -20,9 +21,15 @@ const webinarController = {
     },
     async getWebinarList(req, res, next){
         const category = req.query.category || null;
+        const groupBy = req.query.group == 'true' ? true : false;
+        const upcoming = req.query.upcoming == 'true' ? true : false;
         try {
             const result = await executeStoredProcedure("USP_GetWebinarListChecking_AgentTestAttempt", 
-                [{name : "Agentid", value : req.agentinfo.agentid}, {name : "category_type", value : category}]);
+                [{name : "Agentid", value : req.agentinfo.agentid}, 
+                    {name : "category_type", value : category},
+                    {name : "group", value : groupBy},
+                    {name : "upcoming" , value  : upcoming}
+                ]);
             return res.status(200).json({webinars : result});
         } catch (error) {
             catchBlock(error, "Getting Webinar List.");
@@ -73,7 +80,7 @@ const webinarController = {
                 emailid : "developer@cultureholidays.com",
                 comp_name : "Culture Holidays123"
             };
-            const jwtToken = generateToken({agentData : data}, {expiresIn: '5m'});
+            const jwtToken = generateToken({agentData : data}, {expiresIn: '30m'});
             return {jwtToken, data};
         } catch (error) {
             catchBlock(error, "Verifying User and Creating Login.");
@@ -81,8 +88,19 @@ const webinarController = {
         }
     },
     async submitReplayURLrequest(req, res, next){
+        console.log(req.body);
         try {
-
+            const ejsData = {username : req.agentinfo.agentname,
+                webinarlink : req.body?.webinarlink || "https://google.com",
+                webinarname : req.body?.webinarname || "Bali"
+            }
+            const html = await renderEJS(ejsData, 'src/template/webinarReplayLink.ejs');
+            const result = await sendMail({
+                to : "harshit.cultureholidays@gmail.com",
+                subject : "Webinar Replay URL Request",
+                htmlBody :html
+            });
+            return res.status(200).json({message : "Replay URL request submitted successfully.", html});
         } catch (error) {
             catchBlock(error, "Submitting Replay URL request.");
         }

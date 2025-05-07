@@ -8,6 +8,8 @@ Router.get("/previewcertificate/:category", verifyAuthToken, webinarController.g
 
 Router.get("/getcertificate/:category", verifyAuthToken, webinarController.getCertificate);
 
+Router.post("/registerreplay", verifyAuthToken, webinarController.submitReplayURLrequest);
+
 Router.get("/", webinarController.renderWebinarHome);
 
 module.exports = Router;
