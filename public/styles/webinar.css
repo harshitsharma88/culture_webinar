@@ -28,19 +28,31 @@
 }
 
 .new-pr-hero-text {
-  text-align: center;
+  text-align: start;
   padding: 0 20px;
 }
 .pre-new-hero-text p{
   font-family: 'Inter';
-    font-weight: 600;
-    font-size: 3.7rem;
+
+}
+.join-head-part{
+  font-size: 1rem;
+  font-weight: 300;
+  
 }
 .pre-new-label {
   color: rgb(151, 237, 110);
+  font-size: 2rem;
+}
+.web-part-all{
+
+}
+.all-new-head{
+  font-size: 2.5rem;
+  font-family: 'Inter';
 }
 .pre-new-hero-text {
-  text-align: center;
+  text-align: start;
   
 }
 .pre-new-small {
@@ -63,7 +75,9 @@
 .pre-new-rotating-text.pre-new-show {
   opacity: 1;
 }
-
+.first-webi-p{
+  margin: 0;
+}
 
 .new-pr-header {
   position: fixed;
@@ -296,15 +310,15 @@
 }
 
 .secon-pre-desc {
-  
 
-  text-align: center;
   font-family: 'Segoe UI', sans-serif;
 }
 
 .secon-pre-desc p {
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: #fefefe;
+  font-weight: 500;
+  font-family: 'Inter';
   margin-bottom: 20px;
 }
 
