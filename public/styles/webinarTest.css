@@ -362,6 +362,10 @@ body {
         width: 0;
     }
 }
+
+/* Toaster CSS END */
+
+
 .allresults-in{
     display: flex;
     gap: 1rem;

@@ -4,7 +4,7 @@ const catchBlock = require("../errorHandlers/errorPrinting");
 const {resolve} = require("path");
 const puppeteer = require('puppeteer-core');
 
-const heplers = {
+const helpers = {
     generateToken ( data, options ){
         return jwt.sign(data, process.env.jsecret, options);
     },
@@ -43,7 +43,7 @@ const heplers = {
             });
     
         } catch (err) {
-            console.error('Error rendering image:', err);
+            catchBlock(err, "Generating the Image.");
             return null;
         } finally {
             if (browser) await browser.close();
@@ -51,4 +51,4 @@ const heplers = {
     }   
 };
 
-module.exports = heplers;
+module.exports = helpers;

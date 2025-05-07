@@ -40,48 +40,90 @@ function startQuiz() {
   previewContainer.style.display = 'none';
 }
 
-async function fetchGet(url, headers = {}, options = {}){
+async function fetchGet(url, headers = {}, options = {}) {
   try {
-      const basePath = options.different ? '' : '/webinar/test';
-      url = basePath + url;
-      const response = await fetch(url, { headers :{ 
-        contentType: 'application/json', 
-        "Authorization": sessionStorage.getItem('webitkn'),
-        ...headers}});
-      if (!response.ok && response.status == 401) {
-        // return location.replace('/');
+    const basePath = options.different ? '' : '/webinar/test';
+    url = basePath + url;
+
+    const response = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': sessionStorage.getItem('webitkn'),
+        ...headers
       }
-      const parsedResponse = options.notjson ? response : await response.json();
-      !options.notoken && sessionStorage.setItem('webitkn', response.headers.get('Authorization'));
-      return parsedResponse;
+    });
+
+    const isJson = !options.notjson;
+    const data = isJson ? await response.json() : response;
+
+    if (!options.notoken) {
+      const newToken = response.headers.get('Authorization');
+      newToken && sessionStorage.setItem('webitkn', newToken);
+    }
+
+    if (!response.ok) {
+      throw {
+        status: response.status,
+        message: data?.message || 'Request failed',
+        data,
+        response
+      };
+    }
+
+    return data;
+
   } catch (error) {
-    throw error; 
+    if (error instanceof TypeError) {
+      throw { status: 0, message: 'Network error', error };
+    }
+    throw error;
   }
 }
 
-async function fetchPost(url, data , headers = {}, options = {}){
-    try{
-          const basePath = options.different ? '' : '/webinar/test';
-          url = basePath + url;
-          const response = await fetch(url, 
-            {
-              method: 'POST', body: JSON.stringify(data), 
-              headers: {
-                'Content-Type': 'application/json',
-                "Authorization": sessionStorage.getItem('webitkn'),
-                ...headers
-              }
-            });
-            if (!response.ok && response.status == 401) {
-              // return location.replace('/');
-            }
-          const parsedResponse = options.notjson ? response : await response.json();
-          !options.notoken && sessionStorage.setItem('webitkn', response.headers.get('Authorization'));
-          return parsedResponse;
-    } catch (error) {
-      throw error;
+async function fetchPost(url, data, headers = {}, options = {}) {
+  try {
+    const basePath = options.different ? '' : '/webinar/test';
+    url = basePath + url;
+
+    const response = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': sessionStorage.getItem('webitkn'),
+        ...headers
+      }
+    });
+
+    const isJson = !options.notjson;
+    const responseData = isJson ? await response.json() : response;
+
+    // Save new token if provided
+    if (!options.notoken) {
+      const newToken = response.headers.get('Authorization');
+      newToken && sessionStorage.setItem('webitkn', newToken);
     }
+
+    // Handle HTTP error responses
+    if (!response.ok) {
+      throw {
+        status: response.status,
+        message: responseData?.message || 'Request failed',
+        data: responseData,
+        response
+      };
+    }
+
+    return responseData;
+
+  } catch (error) {
+    if (error instanceof TypeError) {
+      throw { status: 0, message: 'Network error', error };
+    }
+    throw error;
+  }
 }
+
 
 const getWebinarQuestionsCached = (() => {
     let cachedData = null;
@@ -91,10 +133,11 @@ const getWebinarQuestionsCached = (() => {
         const urlParams = new URLSearchParams(window.location.search);
         const category = urlParams.get('category');
         try {
-        const {questions: response} = await fetchGet(`/getquestions?category=${category}`);
+          const {questions: response} = await fetchGet(`/getquestions?category=${category}`);
           cachedData = response;
           triedOnce = true;
         } catch (error) {
+          if(error.status == 409) return displayAlreadyPassedContainer(category); // in case test is already passed then show option only certificate download
             triedOnce = true;
             showToast('error', 'Error', "Can't Get the Details");
             setTimeout(() => {
@@ -113,6 +156,10 @@ const getWebinarQuestionsCached = (() => {
       return cachedData;
     };
 })();
+
+function displayAlreadyPassedContainer(category){
+  
+}
 
 async function getAppendWebinarDetailsQuestions(){
     const urlParams = new URLSearchParams(window.location.search);
@@ -483,7 +530,7 @@ function showToast(type, title, message, duration = 3000) {
 
 async function donwloadCertificate(category) {
   try {
-    let certificatebuffer = await fetchGet('/webinar/getcertificate/Greece', {}, {different : true, notjson : true} );
+    let certificatebuffer = await fetchGet(`/webinar/getcertificate/${category}`, {}, {different : true, notjson : true} );
     const blob = await certificatebuffer.blob();
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
@@ -506,7 +553,6 @@ async function previewCertificate(category){
     container.style.border = "1px solid #ccc";
     container.style.margin = "20px auto";
     return container;
-    // document.body.appendChild(container);
   } catch (error) {
       console.error("Error downloading certificate:", error);
   }

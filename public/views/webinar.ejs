@@ -61,7 +61,7 @@
                         <p>
                             <span class="pre-new-label">Webinar :</span>
                             <span class="pre-new-rotating-container">
-                                <span class="pre-new-rotating-text pre-new-show">10 AM EST</span>
+                                <span class="pre-new-rotating-text pre-new-show"></span>
                             </span>
                         </p>
                     </div>
@@ -203,7 +203,7 @@
 
                         <div class="abi-info-item">
                             <i class="fa fa-calendar-check-o abi-icon"></i>
-                            <div class="abi-label">November 12th</div>
+                            <div class="abi-label blue-date"></div>
                         </div>
 
 
@@ -211,7 +211,7 @@
                     <div class="col-md-3">
                         <div class="abi-info-item">
                             <i class="fa fa-clock-o abi-icon"></i>
-                            <div class="abi-label">10 AM EST</div>
+                            <div class="abi-label blue-time"></div>
                         </div>
 
 
@@ -898,26 +898,6 @@
             plusIcon.classList.toggle('active');
             dropdown.classList.toggle('active');
         });
-
-
-        const textEl = document.querySelector('.pre-new-rotating-text');
-        let index = 0;
-
-        const texts = [
-            "10 AM EST",
-            "November 12th",
-            `Duration 1 Hour <span class="pre-new-small">(approximately)</span>`
-        ];
-
-        setInterval(() => {
-            textEl.classList.remove('pre-new-show'); // fade out
-
-            setTimeout(() => {
-                index = (index + 1) % texts.length;
-                textEl.innerHTML = texts[index];
-                textEl.classList.add('pre-new-show'); // fade in
-            }, 500); // wait for fade out
-        }, 3000);
     </script>
 </body>
 
