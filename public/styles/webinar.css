@@ -1,5 +1,5 @@
 .new-top-first{
-  height: 550px; /* Increased height for the container */
+  height: 590px; /* Increased height for the container */
   overflow: hidden;
   position: relative;
 }
@@ -34,7 +34,7 @@
 .pre-new-hero-text p{
   font-family: 'Inter';
     font-weight: 600;
-    font-size: 2.7rem;
+    font-size: 3.7rem;
 }
 .pre-new-label {
   color: rgb(151, 237, 110);
