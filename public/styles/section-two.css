@@ -13,7 +13,7 @@
 }
 
 .wbt-heading {
-  color: #3926ec;
+  color: #252525;
   letter-spacing: .01em;
 
   font-size: 30px;
@@ -48,7 +48,7 @@
 }
 
 .websc-mainheading {
-  font-size: 32px;
+  font-size: 26px;
   font-weight: 700;
   color: #3926ec;
   margin-bottom: 20px;
@@ -57,9 +57,10 @@
 }
 
 .websc-description {
-  font-size: 16px;
+  font-size: 14px;
   color: #666;
   max-width: 600px;
+  font-family: 'Inter';
   line-height: 1.6;
 }
 
@@ -75,7 +76,7 @@
 .wbt-button {
   padding: 17px 32px;
   font-size: 16px;
-  border-radius: 6px;
+
   font-family: "Inter", sans-serif;
   font-weight: 500;
   border: none;
@@ -84,7 +85,7 @@
 }
 
 .wbt-primary-button {
-  background-color: #3434ff;
+  background-color: #537bff;
   color: #ffffff;
 }
 
@@ -95,7 +96,7 @@
 .wbt-secondary-button {
   background-color: #ffffff;
   color: #3434ff;
-  border: 1px solid #3434ff;
+  border: 1px solid #537bff;
 }
 
 .wbt-secondary-button:hover {
@@ -114,6 +115,7 @@
 
 .wbth-section-image {
   position: absolute;
+  display: none;
   will-change: transform;
   transition: transform 0.5s ease;
   transform-style: preserve-3d;
@@ -227,8 +229,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 50%;
   transition: all 0.3s ease;
@@ -268,7 +270,8 @@
   left: 20px;
   color: white;
   font-size: 18px;
-  font-weight: bold;
+  font-weight: 500;
+  font-family: 'Inter';
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
   max-width: 80%;
 }
@@ -345,6 +348,29 @@
   margin-top: 2rem !important;
 }
 
+.wbt-subtext {
+  display: block;
+  font-size: 1.2rem;
+  margin: 10px 0;
+  font-weight: 600;
+  font-family: 'Inter';
+  color: #3926ec;
+}
+
+.wbt-points-list {
+  padding-left: 20px;
+  margin-top: 10px;
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.6;
+}
+
+.wbt-points-list li {
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #666;
+  font-family: 'Inter';
+}
 
 @media only screen and (min-width: 320px) and (max-width: 650px) {
   .wbt-heading {

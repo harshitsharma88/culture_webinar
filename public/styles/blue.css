@@ -1,0 +1,75 @@
+.all-new-blue{
+    background: #3396FE;
+    padding: 4rem 0;
+}
+
+.abi-all-blue {
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+  }
+  
+  .abi-info-container {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .abi-info-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .abi-icon {
+    margin-bottom: 8px;
+    fill: white;
+    font-size: 45px !important;
+  }
+  
+  .abi-label {
+    font-family: 'Inter';
+    margin-top: 4px;
+    font-weight: 500;
+    font-size: 20px;
+  }
+  
+  .abi-button {
+    font-family: 'Inter';
+    color: #ffffff;
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-weight: bold;
+    border: 0.1px solid white;
+    cursor: pointer;
+    background: none;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+  
+  .abi-button:hover {
+    background-color: #5587fd;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  @media (max-width: 768px) {
+    .abi-all-blue {
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .abi-info-container {
+      width: 100%;
+      justify-content: space-around;
+    }
+    
+    .abi-button {
+      width: 100%;
+      margin-top: 16px;
+    }
+  }
