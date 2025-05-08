@@ -1,0 +1,107 @@
+.tip-part-countdown-section {
+    background-color: #1a0808;
+    padding: 2.5rem 3rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    display: flex
+    ;
+        align-items: center;
+        justify-content: center;
+    width: 100%;
+}
+.inner-timer-part{
+    max-width: 600px;
+}
+/* Heading styling */
+.tip-part-heading {
+    color: #ffffff;
+    font-size: 1.3rem;
+    margin-bottom: 1.2rem;
+    font-weight: 700;
+    font-family: 'Inter';
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Timer container */
+.tip-part-timer-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+/* Individual timer box */
+.tip-part-timer-box {
+    background-color: #2d0909;
+    border-radius: 8px;
+    padding: 0.5rem 0.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.tip-part-timer-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #900 0%, #ff3333 100%);
+}
+
+/* Timer numbers */
+.tip-part-timer-number {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: 'Inter';
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Timer labels */
+.tip-part-timer-label {
+    color: #ff9999;
+    font-size: 10px;
+    font-family: 'Inter';
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .tip-part-countdown-section {
+        padding: 1.5rem;
+    }
+    
+    .tip-part-heading {
+        font-size: 1.5rem;
+    }
+    
+    .tip-part-timer-container {
+        flex-wrap: wrap;
+    }
+    
+    .tip-part-timer-box {
+        flex-basis: calc(50% - 0.5rem);
+        margin-bottom: 1rem;
+    }
+    
+    .tip-part-timer-number {
+        font-size: 2rem;
+    }
+}
+
+.time-part-new{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2rem auto;
+}

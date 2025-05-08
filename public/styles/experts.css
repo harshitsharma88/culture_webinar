@@ -1,114 +1,103 @@
-.experts-section-four{
-    background: linear-gradient(135deg, #ffffff, #e6f2ff, #f0f8ff);
-    margin: 2rem auto;
-    height: 600px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.experts-part {
-   
-    padding: 20px;
-    border-radius: 8px;
-    font-family: 'Arial', sans-serif;
-}
-
-.experts-container {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    flex-wrap: wrap;
-}
-
-.expert-card {
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    width: 280px;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.expert-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-}
-
-.expert-image {
-    background-color: #e9ecef;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.expert-image img {
+.expert-new-part {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
     width: 100%;
-    height: 280px;
-    object-fit: cover;
+    border: 1px solid #f0f0f0;
 }
 
-.expert-info {
-    padding: 20px;
+/* Section heading styling */
+.expert-part-heading {
+    color: #333333;
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
     text-align: center;
-}
-.section-exp-desc{
-    color: #777;
-    font-size: 16px;
-text-align: center;
-font-family: Inter;
-}
-.expert-name {
-    font-size: 18px;
-    font-weight: bold;
-    color: #2c3e50;
-    margin: 0 0 8px 0;
+    position: relative;
+    font-weight: 700;
 }
 
-.expert-title {
-    font-size: 14px;
-    color: #7f8c8d;
-    margin: 0;
-    line-height: 1.4;
+.expert-part-heading::before {
+    content: "**";
+    margin-right: 10px;
+    color: #900;
 }
 
-.section-title {
-    text-align: center;
-    color: #2c3e50;
-    font-size: 28px;
-    font-weight: bold;
+.expert-part-heading::after {
+    content: "**";
+    margin-left: 10px;
+    color: #900;
 }
-@media only screen and (min-width: 320px) and (max-width: 650px) {
 
-    .experts-section-four {
-        margin: 1rem auto;
-        height: auto;
-       
-    }
-    .expert-image img {
-        height: auto;
-
-    }
-    .section-title {
-      
-        font-size: 21px;
-        font-weight: bold;
-    }
+/* Host info container */
+.expert-part-host-container {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
 }
-@media only screen and (min-width: 651px) and (max-width: 1060px) {
-    .experts-section-four {
-        background: linear-gradient(135deg, #ffffff, #e6f2ff, #f0f8ff);
-        margin: 0rem auto;
-        height: auto;
-      
+
+/* Host image container */
+.expert-part-image-container {
+    flex: 0 0 180px;
+    position: relative;
+}
+
+.expert-part-image-container::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background: linear-gradient(135deg, #900, transparent 80%);
+    border-radius: 10px;
+    z-index: 0;
+}
+
+.expert-part-host-image {
+    width: 100%;
+    border-radius: 8px;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    display: block;
+}
+
+/* Host details section */
+.expert-part-host-details {
+    flex: 1;
+}
+
+.expert-part-host-name {
+    color: #333333;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.expert-part-host-role {
+    color: #900;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.expert-part-host-bio {
+    color: #555555;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .expert-part-host-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
     }
-    .experts-container {
-        gap: 20px;
-        flex-wrap: nowrap;
+    
+    .expert-part-image-container {
+        margin-bottom: 1.5rem;
     }
-    .expert-image img {
-        height: auto;
-    }
-  
 }
