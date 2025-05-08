@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="/webinar/styles/gallery.css">
     <link rel="stylesheet" href="/webinar/styles/footer.css">
     <link rel="stylesheet" href="/webinar/styles/blue.css">
+    <link rel="stylesheet" href="/webinar/styles/middle.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -215,7 +216,13 @@
 
     <section class="all-new-blue">
         <div class="container">
-
+            <div class="upcoming-text">
+                <h2 class="upcoming-heading">Upcoming Webinar</h2>
+                <p class="upcoming-description">
+                  Don’t miss our next session: <strong>“Dashing Dubai”</strong> — a dynamic session designed to elevate your travel business skills and insights.
+                </p>
+              </div>
+              
             <div class="row abi-all-blue">
                 <div class="col-md-3">
 
@@ -231,8 +238,6 @@
                         <i class="fa fa-clock-o abi-icon"></i>
                         <div class="abi-label blue-time"></div>
                     </div>
-
-
                 </div>
                 <div class="col-md-3">
                     <div class="abi-info-item">
@@ -281,7 +286,50 @@
         </section>
     </div>
 
+    <!-- Middle section -->
+
+    <div class="section">
+        <section class="or-blb">
+            <div class="new-or-overlay">
+                <div class="timer-part">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="counter-item">
+                                <div class="num" id="webinar-count">0</div>
+                                <div class="numo-label">Webinar</div>
+                            </div>
+
+
+                        </div>
+                        <div class="col-md-3">
+                            <div class="counter-item">
+                                <div class="num" id="attended-count">0</div>
+                                <div class="numo-label">Attended</div>
+                            </div>
+
+
+                        </div>
+                       <div class="col-md-3">
+                        <div class="counter-item">
+                            <div class="num" id="hours-count">0</div>
+                            <div class="numo-label">Hours</div>
+                        </div>
+                       </div>
+
+                        <div class="col-md-3">
+                            <div class="counter-item">
+                                <div class="num" id="subscribers-count">0</div>
+                                <div class="numo-label">Subscribers</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
     <!-- FIFTH Sections Webinar -->
+     
     <section class="all-webinars-lists">
         <div class="container">
             <div class="all-web-cards-part">
@@ -920,6 +968,35 @@
             plusIcon.classList.toggle('active');
             dropdown.classList.toggle('active');
         });
+    </script>
+
+    <script>
+        function animateCounter(elementId, targetValue, duration) {
+            const element = document.getElementById(elementId);
+            const startTime = Date.now();
+            const startValue = 0;
+
+            function updateCounter() {
+                const currentTime = Date.now();
+                const elapsed = currentTime - startTime;
+
+                if (elapsed < duration) {
+                    const value = Math.floor((elapsed / duration) * targetValue);
+                    element.textContent = value;
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    element.textContent = targetValue;
+                }
+            }
+
+            updateCounter();
+        }
+        window.onload = function () {
+            setTimeout(() => animateCounter('webinar-count', 100, 1500), 100);
+            setTimeout(() => animateCounter('attended-count', 5000, 1500), 300);
+            setTimeout(() => animateCounter('hours-count', 1200, 1500), 500);
+            setTimeout(() => animateCounter('subscribers-count', 1500, 1500), 700);
+        };
     </script>
 </body>
 
