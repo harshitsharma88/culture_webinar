@@ -121,7 +121,13 @@ async function showUpcomingWebinarAnimation(){
 function makeUpcomingWebinarAnimation(latestWebinar){
     try {
             const textEl = document.querySelector('.pre-new-rotating-text');
-            const webinarTime = latestWebinar.web_time?.split(',').find(time => time.toLowerCase().includes("est"));
+            let timeZoneName = getTimeZoneAbbreviation();
+            if(!timeZoneName || timeZoneName == '') timeZoneName = 'EST';
+            let webinarTime = latestWebinar.web_time?.split(',').find(time => time.toLowerCase().includes(`${timeZoneName}`.toLowerCase()));
+            if(!webinarTime){
+                timeZoneName = 'EST';
+                webinarTime = latestWebinar.web_time?.split(',').find(time => time.toLowerCase().includes('est'));
+            }
             let index = 0;
             const texts = [
                 latestWebinar.title,
@@ -382,4 +388,47 @@ async function getReplayLink(element, webinarid){
 function closeReplayRegistrationModal() {
     const replayRegistModal = document.getElementById('replay-registration-overlay');
     replayRegistModal.style.display = 'none';
+}
+
+function getTimeZoneAbbreviation(date = new Date()) {
+
+    function isDST(date, timeZone) {
+      const jan = new Date(date.getFullYear(), 0, 1).toLocaleString('en-US', { timeZone });
+      const jul = new Date(date.getFullYear(), 6, 1).toLocaleString('en-US', { timeZone });
+      return jan !== jul; 
+    }
+    
+    function guessAbbreviationFromDate(date) {
+      const parts = date.toLocaleTimeString('en-us', { timeZoneName: 'short' }).split(' ');
+      const abbrev = parts.pop();
+      return abbrev.startsWith('GMT') ? null : abbrev;
+    }
+  
+      let ianaZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const timezoneAbbreviationMap = {
+        'Asia/Calcutta' : 'IST', 
+        'Asia/Kolkata': 'IST',
+        'Asia/Dubai': 'GST',
+        'Asia/Tokyo': 'JST',
+        'Asia/Singapore': 'SGT',
+        'Asia/Bangkok': 'ICT',
+    
+        'Europe/London': isDST(date, 'Europe/London') ? 'BST' : 'GMT',
+        'Europe/Paris': isDST(date, 'Europe/Paris') ? 'CEST' : 'CET',
+        'Europe/Berlin': isDST(date, 'Europe/Berlin') ? 'CEST' : 'CET',
+    
+        'America/New_York': isDST(date, 'America/New_York') ? 'EDT' : 'EST',
+        'America/Chicago': isDST(date, 'America/Chicago') ? 'CDT' : 'CST',
+        'America/Denver': isDST(date, 'America/Denver') ? 'MDT' : 'MST',
+        'America/Los_Angeles': isDST(date, 'America/Los_Angeles') ? 'PDT' : 'PST',
+        'America/Toronto': isDST(date, 'America/Toronto') ? 'EDT' : 'EST',
+        'America/Vancouver': isDST(date, 'America/Vancouver') ? 'PDT' : 'PST',
+    
+        'Australia/Sydney': isDST(date, 'Australia/Sydney') ? 'AEDT' : 'AEST',
+        'Australia/Perth': 'AWST',
+        'Pacific/Auckland': isDST(date, 'Pacific/Auckland') ? 'NZDT' : 'NZST'
+        // Add more as needed
+      };
+    
+      return timezoneAbbreviationMap[ianaZone] || guessAbbreviationFromDate(date);
 }

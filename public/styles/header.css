@@ -322,3 +322,33 @@
 .wbh-hamburger.active span:nth-child(3) {
     transform: translateY(-9px) rotate(-45deg);
 }
+
+/* Countdown timer CSS START */
+
+.countdown-timer-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    font-size: 2rem;
+  }
+
+  .countdown-timer-box {
+    border: 2px solid #e92b52;
+    padding: 15px 20px;
+    border-radius: 8px;
+    min-width: 80px;
+  }
+
+  .countdown-timer-value {
+    font-size: 2.5rem;
+    color: black;
+  }
+
+  .countdown-timer-label {
+    color: #e92b52;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    text-transform: lowercase;
+  }
+
+/* Countdown timer CSS END */
