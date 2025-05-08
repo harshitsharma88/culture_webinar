@@ -76,7 +76,7 @@
                                     <p>
                                         <span class="pre-new-label">Webinar :</span>
                                         <span class="pre-new-rotating-container">
-                                            <span class="pre-new-rotating-text pre-new-show">10 AM EST</span>
+                                            <span class="pre-new-rotating-text pre-new-show"></span>
                                         </span>
                                     </p>
                                 </div>
@@ -143,19 +143,19 @@
                     <h1 class="tip-part-heading">Your Next Webinar is Starting in</h1>
                     <div class="tip-part-timer-container">
                         <div class="tip-part-timer-box">
-                            <div class="tip-part-timer-number" id="days">3</div>
+                            <div class="tip-part-timer-number" id="days">00</div>
                             <div class="tip-part-timer-label">Days</div>
                         </div>
                         <div class="tip-part-timer-box">
-                            <div class="tip-part-timer-number" id="hours">21</div>
+                            <div class="tip-part-timer-number" id="hours">00</div>
                             <div class="tip-part-timer-label">Hours</div>
                         </div>
                         <div class="tip-part-timer-box">
-                            <div class="tip-part-timer-number" id="minutes">46</div>
+                            <div class="tip-part-timer-number" id="minutes">00</div>
                             <div class="tip-part-timer-label">Minutes</div>
                         </div>
                         <div class="tip-part-timer-box">
-                            <div class="tip-part-timer-number" id="seconds">23</div>
+                            <div class="tip-part-timer-number" id="seconds">00</div>
                             <div class="tip-part-timer-label">Seconds</div>
                         </div>
                     </div>
@@ -251,7 +251,7 @@
                 <div class="upcoming-text">
                     <h2 class="upcoming-heading">Upcoming Webinar</h2>
                     <p class="upcoming-description">
-                        Don’t miss our next session: <strong>“Dashing Dubai”</strong> — a dynamic session designed to
+                        Don’t miss our next session: <strong class="web-blue-webname"></strong> — a dynamic session designed to
                         elevate your travel business skills and insights.
                     </p>
                 </div>
@@ -1030,43 +1030,6 @@
             setTimeout(() => animateCounter('hours-count', 1200, 1500), 500);
             setTimeout(() => animateCounter('subscribers-count', 1500, 1500), 700);
         };
-
-
-        const countdownDate = new Date();
-        countdownDate.setDate(countdownDate.getDate() + 3);
-        countdownDate.setHours(countdownDate.getHours() + 21);
-        countdownDate.setMinutes(countdownDate.getMinutes() + 46);
-        countdownDate.setSeconds(countdownDate.getSeconds() + 23);
-
-        // Update the countdown every 1 second
-        const countdown = setInterval(function () {
-            // Get current date and time
-            const now = new Date().getTime();
-
-            // Find the distance between now and the countdown date
-            const distance = countdownDate - now;
-
-            // Time calculations for days, hours, minutes and seconds
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            // Display the result
-            document.getElementById("days").innerHTML = days;
-            document.getElementById("hours").innerHTML = hours;
-            document.getElementById("minutes").innerHTML = minutes;
-            document.getElementById("seconds").innerHTML = seconds;
-
-            // If the countdown is finished, display expired message
-            if (distance < 0) {
-                clearInterval(countdown);
-                document.getElementById("days").innerHTML = "0";
-                document.getElementById("hours").innerHTML = "0";
-                document.getElementById("minutes").innerHTML = "0";
-                document.getElementById("seconds").innerHTML = "0";
-            }
-        }, 1000);
 
     </script>
 </body>

@@ -122,12 +122,13 @@ function makeUpcomingWebinarAnimation(latestWebinar){
     try {
             const textEl = document.querySelector('.pre-new-rotating-text');
             let timeZoneName = getTimeZoneAbbreviation();
-            if(!timeZoneName || timeZoneName == '') timeZoneName = 'EST';
+            if(!timeZoneName || timeZoneName == '' || timeZoneName?.toLowerCase() == 'unknown') timeZoneName = 'EST';
             let webinarTime = latestWebinar.web_time?.split(',').find(time => time.toLowerCase().includes(`${timeZoneName}`.toLowerCase()));
             if(!webinarTime){
                 timeZoneName = 'EST';
                 webinarTime = latestWebinar.web_time?.split(',').find(time => time.toLowerCase().includes('est'));
             }
+            startCountDown(webinarTime, timeZoneName, latestWebinar.web_date);
             let index = 0;
             const texts = [
                 latestWebinar.title,
@@ -149,8 +150,136 @@ function makeUpcomingWebinarAnimation(latestWebinar){
             const belowUpcomingDateBlueSection = document.querySelector(".all-new-blue");
             belowUpcomingDateBlueSection.querySelector(".blue-time").innerHTML = webinarTime;
             belowUpcomingDateBlueSection.querySelector(".blue-date").innerHTML = latestWebinar.dateString;
+            belowUpcomingDateBlueSection.querySelector(".web-blue-webname").innerHTML = `"${latestWebinar.title}"`
     } catch (error) {
         
+    }
+}
+
+function startCountDown(time, timezone, date){
+    time = extractTimeAndAM_PM(time);
+    timezone = getTimeZoneFullName(timezone)
+    const dateTimeString = `${date} ${time}`;
+    const localDate = new Date(dateTimeString);
+    // Convert to target timezone date string, then back to Date object
+    const targetLocaleString = localDate.toLocaleString("en-US", { timezone });
+
+    const targetDate = new Date(targetLocaleString);
+
+    // Update the countdown every 1 second
+    const countdown = setInterval(function () {
+        // Get current date and time
+        const now = new Date().getTime();
+
+        // Find the distance between now and the countdown date
+        const distance = targetDate - now;
+
+        // Time calculations for days, hours, minutes and seconds
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // Display the result
+        document.getElementById("days").innerHTML = days;
+        document.getElementById("hours").innerHTML = hours;
+        document.getElementById("minutes").innerHTML = minutes;
+        document.getElementById("seconds").innerHTML = seconds;
+
+        // If the countdown is finished, display expired message
+        if (distance < 0) {
+            clearInterval(countdown);
+            document.getElementById("days").innerHTML = "0";
+            document.getElementById("hours").innerHTML = "0";
+            document.getElementById("minutes").innerHTML = "0";
+            document.getElementById("seconds").innerHTML = "0";
+        }
+    }, 1000);
+}
+
+function extractTimeAndAM_PM(input) {
+   const tokens = input.trim().split(/\s+/);
+    
+    let time = '';
+    let ampm = '';
+  
+    for (const token of tokens) {
+        const lowered = token.toLowerCase();
+        if(lowered == 'am' || lowered == 'pm') ampm = token;
+        if (/\d/.test(token)) time = token
+    }
+
+    if (!ampm || ampm == ''){
+        const hours = Number(time.split(":")[0]);
+        if(hours >= 12 && hours <= 7) ampm = 'PM'
+        else ampm = "AM"
+    }
+    return time + " " + ampm;
+}
+
+function getTimeZoneAbbreviation(date = new Date()) {
+
+    function isDST(date, timeZone) {
+      const jan = new Date(date.getFullYear(), 0, 1).toLocaleString('en-US', { timeZone });
+      const jul = new Date(date.getFullYear(), 6, 1).toLocaleString('en-US', { timeZone });
+      return jan !== jul; 
+    }
+    
+    function guessAbbreviationFromDate(date) {
+      const parts = date.toLocaleTimeString('en-us', { timeZoneName: 'short' }).split(' ');
+      const abbrev = parts.pop();
+      return abbrev.startsWith('GMT') ? null : abbrev;
+    }
+  
+      let ianaZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const timezoneAbbreviationMap = {
+        'Asia/Calcutta' : 'IST', 
+        'Asia/Kolkata': 'IST',
+        'Asia/Dubai': 'GST',
+        'Asia/Tokyo': 'JST',
+        'Asia/Singapore': 'SGT',
+        'Asia/Bangkok': 'ICT',
+    
+        'Europe/London': isDST(date, 'Europe/London') ? 'BST' : 'GMT',
+        'Europe/Paris': isDST(date, 'Europe/Paris') ? 'CEST' : 'CET',
+        'Europe/Berlin': isDST(date, 'Europe/Berlin') ? 'CEST' : 'CET',
+    
+        'America/New_York': isDST(date, 'America/New_York') ? 'EDT' : 'EST',
+        'America/Chicago': isDST(date, 'America/Chicago') ? 'CDT' : 'CST',
+        'America/Denver': isDST(date, 'America/Denver') ? 'MDT' : 'MST',
+        'America/Los_Angeles': isDST(date, 'America/Los_Angeles') ? 'PDT' : 'PST',
+        'America/Toronto': isDST(date, 'America/Toronto') ? 'EDT' : 'EST',
+        'America/Vancouver': isDST(date, 'America/Vancouver') ? 'PDT' : 'PST',
+    
+        'Australia/Sydney': isDST(date, 'Australia/Sydney') ? 'AEDT' : 'AEST',
+        'Australia/Perth': 'AWST',
+        'Pacific/Auckland': isDST(date, 'Pacific/Auckland') ? 'NZDT' : 'NZST'
+        // Add more as needed
+      };
+    
+      return timezoneAbbreviationMap[ianaZone] || guessAbbreviationFromDate(date);
+}
+
+function getTimeZoneFullName(timeZoneAbr){
+    if(!timeZoneAbr || timeZoneAbr == '')  return "America/New_York";
+    timeZoneAbr = timeZoneAbr?.toUpperCase();
+    try {
+        const timezoneMap = {
+            'IST': 'Asia/Kolkata',
+            'EST': 'America/New_York',
+            'EDT': 'America/New_York',
+            'PST': 'America/Los_Angeles',
+            'PDT': 'America/Los_Angeles',
+            'CST': 'America/Chicago',
+            'MST': 'America/Denver',
+            'BST': 'Europe/London',
+            'GMT': 'Etc/GMT',
+          };
+          const timeZoneFullName = timezoneMap[timeZoneAbr];
+          if (!timeZoneFullName) return "America/New_York"
+          return timeZoneFullName;
+    } catch (error) {
+        return "America/New_York"
     }
 }
 
@@ -388,47 +517,4 @@ async function getReplayLink(element, webinarid){
 function closeReplayRegistrationModal() {
     const replayRegistModal = document.getElementById('replay-registration-overlay');
     replayRegistModal.style.display = 'none';
-}
-
-function getTimeZoneAbbreviation(date = new Date()) {
-
-    function isDST(date, timeZone) {
-      const jan = new Date(date.getFullYear(), 0, 1).toLocaleString('en-US', { timeZone });
-      const jul = new Date(date.getFullYear(), 6, 1).toLocaleString('en-US', { timeZone });
-      return jan !== jul; 
-    }
-    
-    function guessAbbreviationFromDate(date) {
-      const parts = date.toLocaleTimeString('en-us', { timeZoneName: 'short' }).split(' ');
-      const abbrev = parts.pop();
-      return abbrev.startsWith('GMT') ? null : abbrev;
-    }
-  
-      let ianaZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const timezoneAbbreviationMap = {
-        'Asia/Calcutta' : 'IST', 
-        'Asia/Kolkata': 'IST',
-        'Asia/Dubai': 'GST',
-        'Asia/Tokyo': 'JST',
-        'Asia/Singapore': 'SGT',
-        'Asia/Bangkok': 'ICT',
-    
-        'Europe/London': isDST(date, 'Europe/London') ? 'BST' : 'GMT',
-        'Europe/Paris': isDST(date, 'Europe/Paris') ? 'CEST' : 'CET',
-        'Europe/Berlin': isDST(date, 'Europe/Berlin') ? 'CEST' : 'CET',
-    
-        'America/New_York': isDST(date, 'America/New_York') ? 'EDT' : 'EST',
-        'America/Chicago': isDST(date, 'America/Chicago') ? 'CDT' : 'CST',
-        'America/Denver': isDST(date, 'America/Denver') ? 'MDT' : 'MST',
-        'America/Los_Angeles': isDST(date, 'America/Los_Angeles') ? 'PDT' : 'PST',
-        'America/Toronto': isDST(date, 'America/Toronto') ? 'EDT' : 'EST',
-        'America/Vancouver': isDST(date, 'America/Vancouver') ? 'PDT' : 'PST',
-    
-        'Australia/Sydney': isDST(date, 'Australia/Sydney') ? 'AEDT' : 'AEST',
-        'Australia/Perth': 'AWST',
-        'Pacific/Auckland': isDST(date, 'Pacific/Auckland') ? 'NZDT' : 'NZST'
-        // Add more as needed
-      };
-    
-      return timezoneAbbreviationMap[ianaZone] || guessAbbreviationFromDate(date);
 }
