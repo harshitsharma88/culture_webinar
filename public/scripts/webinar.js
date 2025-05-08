@@ -181,18 +181,18 @@ function startCountDown(time, timezone, date){
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
         // Display the result
-        document.getElementById("days").innerHTML = days;
-        document.getElementById("hours").innerHTML = hours;
-        document.getElementById("minutes").innerHTML = minutes;
-        document.getElementById("seconds").innerHTML = seconds;
+        document.getElementById("days").innerHTML = `${days}`.padStart(2, "0");
+        document.getElementById("hours").innerHTML = `${hours}`.padStart(2,"0");
+        document.getElementById("minutes").innerHTML = `${minutes}`.padStart(2, "0");
+        document.getElementById("seconds").innerHTML = `${seconds}`.padStart(2, "0");
 
         // If the countdown is finished, display expired message
         if (distance < 0) {
             clearInterval(countdown);
-            document.getElementById("days").innerHTML = "0";
-            document.getElementById("hours").innerHTML = "0";
-            document.getElementById("minutes").innerHTML = "0";
-            document.getElementById("seconds").innerHTML = "0";
+            document.getElementById("days").innerHTML = "00";
+            document.getElementById("hours").innerHTML = "00";
+            document.getElementById("minutes").innerHTML = "00";
+            document.getElementById("seconds").innerHTML = "00";
         }
     }, 1000);
 }
