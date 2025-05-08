@@ -1,10 +1,7 @@
 .expert-new-part {
-    background-color: #ffffff;
-    border-radius: 12px;
     padding: 2.5rem;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
     width: 100%;
-    border: 1px solid #f0f0f0;
+    
 }
 
 /* Section heading styling */
@@ -13,23 +10,12 @@
     font-size: 1.8rem;
     margin-bottom: 2rem;
     text-align: center;
+    font-family: 'Inter';
     position: relative;
     font-weight: 700;
 }
 
-.expert-part-heading::before {
-    content: "**";
-    margin-right: 10px;
-    color: #900;
-}
 
-.expert-part-heading::after {
-    content: "**";
-    margin-left: 10px;
-    color: #900;
-}
-
-/* Host info container */
 .expert-part-host-container {
     display: flex;
     gap: 2rem;
@@ -42,24 +28,13 @@
     position: relative;
 }
 
-.expert-part-image-container::before {
-    content: '';
-    position: absolute;
-    top: -5px;
-    left: -5px;
-    right: -5px;
-    bottom: -5px;
-    background: linear-gradient(135deg, #900, transparent 80%);
-    border-radius: 10px;
-    z-index: 0;
-}
 
 .expert-part-host-image {
     width: 100%;
-    border-radius: 8px;
+    height: 400px;
+    object-fit: contain;
     position: relative;
     z-index: 1;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     display: block;
 }
 
@@ -71,8 +46,14 @@
 .expert-part-host-name {
     color: #333333;
     font-size: 1.6rem;
+    font-family: 'Inter';
     font-weight: 700;
     margin-bottom: 0.5rem;
+}
+.line-through{
+    background-color: #e7e6e6;
+    width: 100%;
+    height: 1px;
 }
 
 .expert-part-host-role {
@@ -87,6 +68,7 @@
     color: #555555;
     line-height: 1.6;
     font-size: 1rem;
+    margin-top: 1.3rem;
 }
 
 /* Responsive adjustments */
