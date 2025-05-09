@@ -1,5 +1,5 @@
 .all-webinars-lists{
-    margin: 2rem auto;
+    margin: 4rem auto;
 }
 .new-web-container {
     max-width: 1200px;
@@ -60,7 +60,6 @@
     flex-wrap: wrap;
     gap: 12px;
     margin-bottom: 30px;
-    padding: 0 15px;
 }
 
 .new-web-sub-category {
@@ -298,4 +297,57 @@
     height: 16px;
     margin-right: 8px;
     vertical-align: middle;
+}
+
+.web-ni-contries-sub-part {
+    /* background: #f9f9f9; */
+    border-radius: 12px;
+    font-family: 'Inter'
+}
+
+.web-ni-countries-heading {
+    font-size: 20px;
+    margin-bottom: 5px;
+    color: #222;
+}
+
+.web-ni-countries-description {
+    font-size: 12px;
+    color: #0a63f1;
+    margin-bottom: 20px;
+}
+
+.web-ni-country-list {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.web-ni-country-item {
+    border-radius: 10px;
+    background: linear-gradient(135deg, #e8f0ff 0%, #ffffff 100%);
+    backdrop-filter: blur(4px);
+    color: #000;
+    padding: 8px 20px;
+    font-size: 0.8rem;
+    color: #2d3748;
+    font-weight: 500;
+    border: 0.5px solid #d3d3d3;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.web-ni-country-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+.new-web-subcategory-content{
+    margin-top:2rem;
+}
+.new-web-category-heading {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #333;
+    font-weight: 600;
+    font-family: 'Inter'
 }
