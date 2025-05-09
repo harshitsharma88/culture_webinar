@@ -25,7 +25,7 @@ const helpers = {
             browser = await puppeteer.launch({
                 executablePath: require("path").join('C:', 'Program Files', 'Google', 'Chrome', 'Application', 'chrome.exe'),
                 headless: true,
-                args: ['--no-sandbox', '--disable-setuid-sandbox', '--single-process'],
+                args: ['--no-sandbox', '--disable-setuid-sandbox'],
                 timeout: 60000,
                 userDataDir : resolve("puppeteer_temp")
             });

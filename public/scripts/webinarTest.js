@@ -557,3 +557,42 @@ async function previewCertificate(category){
       console.error("Error downloading certificate:", error);
   }
 }
+
+
+async function downloadCertificateFromHTML(container, filename = 'certificate.png') {
+  if (typeof html2canvas === 'undefined') {
+      await new Promise(resolve => {
+          const script = document.createElement('script');
+          script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+          script.onload = resolve;
+          document.head.appendChild(script);
+      });
+  }
+
+  if (!document.body.contains(container)) {
+      container.style.position = 'absolute';
+      container.style.top = '-9999px';
+      document.body.appendChild(container);
+  }
+
+  await Promise.all(Array.from(container.querySelectorAll("img")).map(img =>
+      new Promise(resolve => {
+          if (img.complete) resolve();
+          else img.onload = img.onerror = resolve;
+      })
+  ));
+
+  const canvas = await html2canvas(container, {
+      useCORS: true,
+      backgroundColor: null,
+      scale: 2,
+      width: container.offsetWidth,
+      height: container.offsetHeight
+  });
+
+  const imgData = canvas.toDataURL("image/png");
+  const link = document.createElement('a');
+  link.href = imgData;
+  link.download = filename;
+  link.click();
+}

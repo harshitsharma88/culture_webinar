@@ -491,19 +491,78 @@ async function donwloadCertificate(element, category) {
         const originalTextSpan = element;
         const originalHTML = originalTextSpan.innerHTML;
         element.classList.add('loading');
-       originalTextSpan.textContent = 'Downloading...';
-      let certificatebuffer = await fetchGet(`/getcertificate/${category}`, {}, {notjson : true, notoken : true} );
-      const blob = await certificatebuffer.blob();
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'certificate.png';
-      element.classList.remove('loading');
-      originalTextSpan.innerHTML = originalHTML;
-      link.click();
+        originalTextSpan.textContent = 'Downloading...';
+        const container = await previewCertificate(category);
+        await downloadCertificateFromHTML(container, `${category}_Expert.png`);
+        return;
+        let certificatebuffer = await fetchGet(`/getcertificate/${category}`, {}, {notjson : true, notoken : true} );
+        const blob = await certificatebuffer.blob();
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'certificate.png';
+        element.classList.remove('loading');
+        originalTextSpan.innerHTML = originalHTML;
+        link.click();
     } catch (error) {
         console.error("Error downloading certificate:", error);
     }
 }
+
+async function previewCertificate(category){
+    try {
+      let certificateHTML = await fetchGet(`/webinar/previewcertificate/${category}`, {}, {different : true, notjson : true} );
+      const html = await certificateHTML.text();
+      const container = document.createElement('div');
+      container.innerHTML = html;
+      container.style.width = "1024px";
+      container.style.height = "635px";
+      container.style.overflow = "auto";
+      container.style.border = "1px solid #ccc";
+      container.style.margin = "20px auto";
+      return container;
+    } catch (error) {
+        console.error("Error downloading certificate:", error);
+    }
+  }
+  
+  
+  async function downloadCertificateFromHTML(container, filename = 'certificate.png') {
+    if (typeof html2canvas === 'undefined') {
+        await new Promise(resolve => {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+            script.onload = resolve;
+            document.head.appendChild(script);
+        });
+    }
+  
+    if (!document.body.contains(container)) {
+        container.style.position = 'absolute';
+        container.style.top = '-9999px';
+        document.body.appendChild(container);
+    }
+
+    await Promise.all(Array.from(container.querySelectorAll("img")).map(img =>
+        new Promise(resolve => {
+            if (img.complete) resolve();
+            else img.onload = img.onerror = resolve;
+        })
+    ));
+  
+    const canvas = await html2canvas(container, {
+        useCORS: true,
+        backgroundColor: null,
+        scale: 2,
+        width: container.offsetWidth,
+        height: container.offsetHeight
+    });
+  
+    const imgData = canvas.toDataURL("image/png");
+    const link = document.createElement('a');
+    link.href = imgData;
+    link.download = filename;
+    link.click();
+  }
 
 async function getReplayLink(element, webinarid){
     const replayRegistModal = document.getElementById('replay-registration-overlay');
