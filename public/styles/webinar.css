@@ -1,3 +1,7 @@
+.web-all-web-cards-part{
+  text-align: center;
+}
+
 .new-top-first{
   height: 590px; /* Increased height for the container */
   overflow: hidden;
